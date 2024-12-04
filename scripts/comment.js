@@ -9,11 +9,8 @@ const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 async function run() {
   const context = process.env.GITHUB_CONTEXT || "{}";
   const github = JSON.parse(context);
-  const [repo, owner] = github.repository.split("/");
+  const [owner, repo] = github.repository.split("/");
   const { event_name, event, sha } = github;
-
-  // TODO: delete this
-  console.log("github context", JSON.stringify(github, null, 2));
 
   // Convert the image to base64
   const readParams = { encoding: "base64" };
