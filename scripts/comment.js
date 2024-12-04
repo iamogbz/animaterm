@@ -1,6 +1,6 @@
-// const fs = require("fs");
+const fs = require("fs");
 const nodeFetch = require("node-fetch").default;
-const path = require('path');
+const path = require("path");
 
 const [, , outputPath] = process.argv;
 const IMAGE_PATH = path.resolve(process.env.OUTPUT_PATH || outputPath);
@@ -9,33 +9,34 @@ const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 
 async function uploadToCatbox(filePath) {
   // Catbox upload endpoint
-  const apiUrl = 'https://catbox.moe/user/api.php';
+  const apiUrl = "https://catbox.moe/user/api.php";
 
   // Create a form data object
   const formData = new FormData();
-  formData.append('reqtype', 'fileupload'); // Required parameter for Catbox
-  formData.append('fileToUpload', filePath); // Append the file to upload
+  formData.append("reqtype", "fileupload"); // Required parameter for Catbox
+  // @ts-ignore - Ignore type checking for {ReadStream}, as it's valid JS
+  formData.append("fileToUpload", fs.createReadStream(filePath)); // Append the file to upload
 
   try {
-      // Make the POST request to upload the file
-      const response = await fetch(apiUrl, {
-          method: 'POST',
-          body: formData,
-      });
+    // Make the POST request to upload the file
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      body: formData,
+    });
 
-      // Parse the response text
-      const responseText = await response.text();
+    // Parse the response text
+    const responseText = await response.text();
 
-      if (response.ok) {
-          console.log('File uploaded successfully! URL:', responseText);
-          return responseText; // Return the URL of the uploaded file
-      } else {
-          console.error('Failed to upload file. Response:', responseText);
-          throw new Error(`File upload failed: ${filePath}`);
-      }
+    if (response.ok) {
+      console.log("File uploaded successfully! URL:", responseText);
+      return responseText; // Return the URL of the uploaded file
+    } else {
+      console.error("Failed to upload file. Response:", responseText);
+      throw new Error(`File upload failed: ${filePath}`);
+    }
   } catch (error) {
-      console.error('Error uploading file:', error);
-      throw error;
+    console.error("Error uploading file:", error);
+    throw error;
   }
 }
 
@@ -49,7 +50,9 @@ async function run() {
   // const readParams = { encoding: "base64" };
   // const imageBase64 = fs.readFileSync(IMAGE_PATH, { encoding: "base64" });
   // const imageMarkdown = `![Generated Image](data:image/${IMAGE_EXT};${readParams.encoding},${imageBase64})`;
-  const imageMarkdown = `![Generated Image](${await uploadToCatbox(IMAGE_PATH)})`;
+  const imageMarkdown = `![Generated Image](${await uploadToCatbox(
+    IMAGE_PATH
+  )})`;
 
   const commentBody = `${COMMENT_IDENTIFIER}\n${imageMarkdown}`;
 
