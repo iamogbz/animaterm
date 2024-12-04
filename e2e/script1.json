@@ -1,0 +1,22 @@
+[
+  { "action": "type", "payload": "echo Hello, world!" },
+  { "action": "enter" },
+  { "action": "waitForOutput", "payload": "Hello, world!", "timeout": 3000 },
+  { "action": "type", "payload": "ls -la" },
+  { "action": "enter" },
+  { "action": "waitForOutput", "payload": "script1.json", "timeout": 5000 },
+  { "action": "type", "payload": "cat script1.json" },
+  { "action": "enter" },
+  {
+    "action": "copy",
+    "payload": {
+      "startLine": 2,
+      "startPos": 0,
+      "endLine": 2,
+      "endPos": 10
+    }
+  },
+  { "action": "paste" },
+  { "action": "clear" },
+  { "action": "type", "payload": "Goodbye!" }
+]
