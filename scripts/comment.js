@@ -55,7 +55,7 @@ async function run() {
   const isPullRequest = event_name === "pull_request";
   const endpoint = [
     `https://api.github.com/repos/${owner}/${repo}/`,
-    isPullRequest ? `issues/${event.number}` : `commits/${sha}`,
+    isPullRequest ? `pulls/${event.number}` : `commits/${sha}`,
     "/comments",
   ].join("");
 
