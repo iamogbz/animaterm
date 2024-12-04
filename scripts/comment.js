@@ -10,7 +10,10 @@ async function run() {
   const context = process.env.GITHUB_CONTEXT || "{}";
   const github = JSON.parse(context);
   const [repo, owner] = github.repository.split("/");
-  const { event_name, pull_request, sha } = github;
+  const { event_name, event, sha } = github;
+
+  // TODO: delete this
+  console.log("github context", JSON.stringify(github, null, 2));
 
   // Convert the image to base64
   const readParams = { encoding: "base64" };
@@ -23,7 +26,7 @@ async function run() {
   const isPullRequest = event_name === "pull_request";
   const endpoint = [
     `https://api.github.com/repos/${owner}/${repo}/`,
-    isPullRequest ? `issues/${pull_request.number}` : `commits/${sha}`,
+    isPullRequest ? `issues/${event.number}` : `commits/${sha}`,
     "/comments",
   ].join("");
 
@@ -40,7 +43,9 @@ async function run() {
 
   if (!Array.isArray(existingComments))
     throw new Error(
-      `Could not retrieve comments: ${JSON.stringify(existingComments)}`
+      `Could not retrieve comments: ${endpoint} -> ${JSON.stringify(
+        existingComments
+      )}`
     );
 
   const existingComment = existingComments.find(
