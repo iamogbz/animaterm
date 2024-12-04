@@ -6,4 +6,4 @@ const [, _, scriptPath, outputPath] = process.argv;
 const script = require(path.resolve(scriptPath));
 
 // Run the simulation
-simulateSteps(script, path.resolve(outputPath));
+simulateSteps(script, path.resolve(process.env.OUTPUT_PATH || outputPath));

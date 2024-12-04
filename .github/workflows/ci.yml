@@ -11,6 +11,8 @@ jobs:
   demo-current-build:
     name: Demo current build
     runs-on: ubuntu-latest
+    env:
+      OUTPUT_PATH: ./build/output.gif
 
     steps:
       # Step 1: Checkout the repository
@@ -33,16 +35,17 @@ jobs:
 
       # Step 4: Run the script to generate the image
       - name: Run script to generate image
-        run: pnpm build-comment # Replace with your actual script name
         env:
           CI: true
+        run: |
+          pnpm build-verify
 
       # Step 5: Upload the generated image as an artifact
       - name: Upload generated image
         uses: actions/upload-artifact@v3
         with:
           name: generated-image
-          path: ./generated/output.png # Path to the generated image file
+          path: ${{ env.OUTPUT_PATH }}
 
       # Step 6: Post or update the comment
       - name: Post or update comment
@@ -50,5 +53,4 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          node scripts/comments.js
-        env:
+          pnpm build-comment

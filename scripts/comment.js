@@ -1,8 +1,9 @@
 const fs = require("fs");
 const nodeFetch = require("node-fetch").default;
 
-const IMAGE_EXT = "gif";
-const IMAGE_PATH = `./generated/output.${IMAGE_EXT}`;
+const [, , outputPath] = process.argv;
+const IMAGE_PATH = process.env.OUTPUT_PATH || outputPath;
+const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 
 async function run() {

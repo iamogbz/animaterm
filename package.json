@@ -2,7 +2,7 @@
   "name": "animaterm",
   "scripts": {
     "build-comment": "node --env-file=.env 'scripts/comment.js'",
-    "e2e": "node 'src/index.js' 'e2e/script1.json' 'generated/output.gif'"
+    "build-verify": "node --env-file=.env 'src/index.js' 'e2e/script1.json'"
   },
   "dependencies": {
     "blessed": "^0.1.81",
