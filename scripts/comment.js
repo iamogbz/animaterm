@@ -1,8 +1,9 @@
-const fs = require("fs");
+// const fs = require("fs");
 const nodeFetch = require("node-fetch").default;
+const path = require('path');
 
 const [, , outputPath] = process.argv;
-const IMAGE_PATH = process.env.OUTPUT_PATH || outputPath;
+const IMAGE_PATH = path.resolve(process.env.OUTPUT_PATH || outputPath);
 // const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 
@@ -30,7 +31,7 @@ async function uploadToCatbox(filePath) {
           return responseText; // Return the URL of the uploaded file
       } else {
           console.error('Failed to upload file. Response:', responseText);
-          throw new Error('File upload failed');
+          throw new Error(`File upload failed: ${filePath}`);
       }
   } catch (error) {
       console.error('Error uploading file:', error);
