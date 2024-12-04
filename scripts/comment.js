@@ -39,7 +39,9 @@ async function run() {
   }).then((res) => res.json());
 
   if (!Array.isArray(existingComments))
-    throw new Error("Could not retrieve comments");
+    throw new Error(
+      `Could not retrieve comments: ${JSON.stringify(existingComments)}`
+    );
 
   const existingComment = existingComments.find(
     (/** @type {{ body: string }} */ comment) =>

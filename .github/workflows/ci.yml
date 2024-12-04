@@ -44,7 +44,7 @@ jobs:
 
       # Step 5: Upload the generated image as an artifact
       - name: Upload generated image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: generated-image
           path: ${{ env.OUTPUT_PATH }}
