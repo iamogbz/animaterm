@@ -54,7 +54,7 @@ async function run() {
   // Determine if we are on a PR or commit
   const isPullRequest = event_name === "pull_request";
   const repoEndpoint = `https://api.github.com/repos/${owner}/${repo}/`;
-  const endpoint = [
+  const commentsEndpoint = [
     repoEndpoint,
     isPullRequest ? `issues/${event.number}` : `commits/${sha}`,
     "/comments",
@@ -67,13 +67,13 @@ async function run() {
   };
 
   // Get existing comments
-  const existingComments = await nodeFetch(endpoint, {
-    headers: { Authorization },
-  }).then((res) => res.json());
+  const existingComments = await nodeFetch(commentsEndpoint, { headers }).then(
+    (res) => res.json()
+  );
 
   if (!Array.isArray(existingComments))
     throw new Error(
-      `Could not retrieve comments: ${endpoint} -> ${JSON.stringify(
+      `Could not retrieve comments: ${commentsEndpoint} -> ${JSON.stringify(
         existingComments
       )}`
     );
@@ -84,7 +84,7 @@ async function run() {
   );
 
   const params = {
-    endpoint,
+    endpoint: commentsEndpoint,
     requestInit: {
       headers,
       body: JSON.stringify({ body: commentBody }),
@@ -95,9 +95,9 @@ async function run() {
     // Update existing comment
     console.log("Updating existing comment", existingComment.id);
     if (isPullRequest) {
-      params.endpoint = `${repoEndpoint}/issues/comments`;
+      params.endpoint = `${repoEndpoint}issues/comments`;
     }
-    params.endpoint = `${endpoint}/${existingComment.id}`;
+    params.endpoint = `${params.endpoint}/${existingComment.id}`;
     params.requestInit.method = "PATCH";
   } else {
     // Post new comment
