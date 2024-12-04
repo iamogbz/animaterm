@@ -55,7 +55,7 @@ async function run() {
   const isPullRequest = event_name === "pull_request";
   const endpoint = [
     `https://api.github.com/repos/${owner}/${repo}/`,
-    isPullRequest ? `pulls/${event.number}` : `commits/${sha}`,
+    isPullRequest ? `issues/${event.number}` : `commits/${sha}`,
     "/comments",
   ].join("");
 
@@ -104,8 +104,9 @@ async function run() {
   console.log("Comment request", params);
   const commentResult = await nodeFetch(params.endpoint, params.requestInit);
   console.log("Comment response", {
-    ...commentResult,
     body: await commentResult.text(),
+    status: commentResult.status,
+    statusText: commentResult.statusText,
   });
 }
 
