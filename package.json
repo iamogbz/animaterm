@@ -1,0 +1,13 @@
+{
+  "name": "animaterm",
+  "scripts": {
+    "e2e": "node 'scripts/comment.js' 'e2e/script1.json' 'generated/output.gif'"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "clipboardy": "^4.0.0"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
