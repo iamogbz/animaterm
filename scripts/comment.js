@@ -53,8 +53,9 @@ async function run() {
 
   // Determine if we are on a PR or commit
   const isPullRequest = event_name === "pull_request";
+  const repoEndpoint = `https://api.github.com/repos/${owner}/${repo}/`;
   const endpoint = [
-    `https://api.github.com/repos/${owner}/${repo}/`,
+    repoEndpoint,
     isPullRequest ? `issues/${event.number}` : `commits/${sha}`,
     "/comments",
   ].join("");
@@ -93,6 +94,9 @@ async function run() {
   if (existingComment) {
     // Update existing comment
     console.log("Updating existing comment", existingComment.id);
+    if (isPullRequest) {
+      params.endpoint = `${repoEndpoint}/issues/comments`;
+    }
     params.endpoint = `${endpoint}/${existingComment.id}`;
     params.requestInit.method = "PATCH";
   } else {
