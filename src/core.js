@@ -42,14 +42,20 @@ encoder.setRepeat(0); // 0 = loop forever
 encoder.setDelay(500); // frame delay in ms
 encoder.setQuality(10);
 
-// Update the terminal's display content
-function updateTerminal(content, state) {
-  terminalBox.setContent(content);
+/**
+ * Update the terminal's display content
+ * @param {{ terminalContent: any; clipboard?: string; }} state
+ */
+function updateTerminal(state) {
+  terminalBox.setContent(state.terminalContent);
   screen.render();
   recordFrame(state);
 }
 
-// Record a frame of the terminal state
+/**
+ * Record a frame of the terminal state
+ * @param {{ terminalContent: string; }} state
+ */
 function recordFrame(state) {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, width, height);
@@ -64,19 +70,34 @@ function recordFrame(state) {
   encoder.addFrame(ctx);
 }
 
-// Utility to terminate and save recording
-const finishRecording = (outputPath, exitCode = 0) => {
+/**
+ * Utility to terminate and save recording
+ * @param {{ outputPath: string; terminalContent: string; }} state
+ */
+async function finishRecording(state, exitCode = 0) {
+  // delay last frame for easy grok
+  await delay(2000);
+  recordFrame(state);
+  const { outputPath } = state;
   encoder.finish();
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, encoder.out.getData());
   console.log(`Recording saved as '${outputPath}'`);
   process.exit(exitCode);
-};
+}
 
-// Utility to throw an error and abort execution
-function abortExecution(outputPath, errorMessage) {
-  console.error(`\nERROR: ${errorMessage}`);
-  finishRecording(outputPath, 1);
+/**
+ * Utility to throw an error and abort execution
+ * @param {{ clipboard?: string | undefined; outputPath: string; terminalContent: string; }} state
+ * @param {string} errorMessage
+ */
+function abortExecution(state, errorMessage) {
+  const executionError = `\nERROR: ${errorMessage}`;
+  console.error(executionError);
+  // print error to recorded terminal
+  state.terminalContent += `\n${executionError}`;
+  updateTerminal(state);
+  return finishRecording(state, 1);
 }
 
 // Registry of actions with their implementation
@@ -92,13 +113,15 @@ const actionsRegistry = Object.freeze({
   type: async ({ payload }, state) => {
     for (const char of `${payload}`) {
       state.terminalContent += char;
-      updateTerminal(state.terminalContent, state);
-      await delay(100);
+      updateTerminal(state);
+      // randomise type speed
+      const minTypeSpeedMs = 10;
+      await delay(Math.random() * minTypeSpeedMs + minTypeSpeedMs);
     }
   },
   enter: async (_, state) => {
     state.terminalContent += "\n";
-    updateTerminal(state.terminalContent, state);
+    updateTerminal(state);
     await delay(500);
   },
   waitForOutput: async ({ payload, timeout = 5000 }, state) => {
@@ -112,7 +135,7 @@ const actionsRegistry = Object.freeze({
   },
   paste: async (_, state) => {
     state.terminalContent += state.clipboard;
-    updateTerminal(state.terminalContent, state);
+    updateTerminal(state);
     await delay(500);
   },
   copy: async (step, state) => {
@@ -133,26 +156,31 @@ const actionsRegistry = Object.freeze({
   },
   clear: async (_, state) => {
     state.terminalContent = "";
-    updateTerminal(state.terminalContent, state);
+    updateTerminal(state);
   },
 });
 
 // Delay function
-const delay = (/** @type {number} */ ms) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+function delay(/** @type {number} */ ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-// Simulate steps with dynamic handling of actions
+/**
+ * Simulate steps with dynamic handling of actions
+ * @param {object[]} steps
+ * @param {string} outputPath
+ */
 async function simulateSteps(steps, outputPath) {
-  const finish = () => finishRecording(outputPath);
-
-  // Quit on Escape, q, or Ctrl+C
-  screen.key(["escape", "q", "C-c"], finish);
-
   // Run core simulation
   const state = {
-    terminalContent: "",
     clipboard: "",
+    outputPath,
+    terminalContent: "",
   };
+
+  const finish = () => finishRecording(state);
+  // Quit on Escape, q, or Ctrl+C
+  screen.key(["escape", "q", "C-c"], finish);
 
   try {
     for (const step of steps) {
@@ -160,14 +188,14 @@ async function simulateSteps(steps, outputPath) {
       if (action) {
         await action(step, state);
       } else {
-        abortExecution(outputPath, `Unknown action: ${step.action}`);
+        await abortExecution(state, `Unknown action: ${step.action}`);
       }
     }
   } catch (error) {
-    abortExecution(outputPath, `Unexpected error: ${error.message}`);
+    await abortExecution(state, `Unexpected error: ${error.message}`);
   }
 
-  finish();
+  await finish();
 }
 
 module.exports = { encoder, screen, simulateSteps };
