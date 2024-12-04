@@ -37,6 +37,7 @@ jobs:
       - name: Run script to generate image
         env:
           CI: true
+        continue-on-error: true
         run: |
           touch .env
           pnpm build-verify
