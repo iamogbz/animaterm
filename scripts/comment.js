@@ -82,27 +82,28 @@ async function run() {
       comment.body.includes(COMMENT_IDENTIFIER)
   );
 
-  const requestInit = Object.freeze({
-    headers,
-    body: JSON.stringify({ body: commentBody }),
-  });
-  console.log("Comment request", requestInit.body);
+  const params = {
+    endpoint,
+    requestInit: {
+      headers,
+      body: JSON.stringify({ body: commentBody }),
+    },
+  };
 
   if (existingComment) {
     // Update existing comment
     console.log("Updating existing comment", existingComment.id);
-    await nodeFetch(`${endpoint}/${existingComment.id}`, {
-      method: "PATCH",
-      ...requestInit,
-    });
+    params.endpoint = `${endpoint}/${existingComment.id}`;
+    params.requestInit.method = "PATCH";
   } else {
     // Post new comment
     console.log("Creating new comment");
-    await nodeFetch(endpoint, {
-      method: "POST",
-      ...requestInit,
-    });
+    params.requestInit.method = "POST";
   }
+
+  console.log("Comment request", params);
+  const commentResult = await nodeFetch(params.endpoint, params.requestInit);
+  console.log("Comment response", commentResult);
 }
 
 run().catch((error) => {
