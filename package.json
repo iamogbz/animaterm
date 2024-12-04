@@ -1,13 +1,16 @@
 {
   "name": "animaterm",
   "scripts": {
-    "e2e": "node 'scripts/comment.js' 'e2e/script1.json' 'generated/output.gif'"
+    "build-comment": "node --env-file=.env 'scripts/comment.js'",
+    "e2e": "node 'src/index.js' 'e2e/script1.json' 'generated/output.gif'"
   },
   "dependencies": {
+    "blessed": "^0.1.81",
     "canvas": "^2.11.2",
-    "clipboardy": "^4.0.0"
+    "clipboardy": "^4.0.0",
+    "gifencoder": "^2.0.1"
   },
   "devDependencies": {
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^2.6.2"
   }
 }
