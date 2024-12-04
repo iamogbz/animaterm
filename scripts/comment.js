@@ -46,13 +46,8 @@ async function run() {
   const [owner, repo] = github.repository.split("/");
   const { event_name, event, sha } = github;
 
-  // Convert the image to base64
-  // const readParams = { encoding: "base64" };
-  // const imageBase64 = fs.readFileSync(IMAGE_PATH, { encoding: "base64" });
-  // const imageMarkdown = `![Generated Image](data:image/${IMAGE_EXT};${readParams.encoding},${imageBase64})`;
-  const imageMarkdown = `![Generated Image](${await uploadToCatbox(
-    IMAGE_PATH
-  )})`;
+  const imageUrl = await uploadToCatbox(IMAGE_PATH);
+  const imageMarkdown = `![Generated Image](${imageUrl})`;
 
   const commentBody = `${COMMENT_IDENTIFIER}\n${imageMarkdown}`;
 
@@ -91,15 +86,18 @@ async function run() {
     headers,
     body: JSON.stringify({ body: commentBody }),
   });
+  console.log("Comment request", requestInit.body);
 
   if (existingComment) {
     // Update existing comment
+    console.log("Updating existing comment", existingComment.id);
     await nodeFetch(`${endpoint}/${existingComment.id}`, {
       method: "PATCH",
       ...requestInit,
     });
   } else {
     // Post new comment
+    console.log("Creating new comment");
     await nodeFetch(endpoint, {
       method: "POST",
       ...requestInit,
