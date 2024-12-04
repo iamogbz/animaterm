@@ -103,7 +103,10 @@ async function run() {
 
   console.log("Comment request", params);
   const commentResult = await nodeFetch(params.endpoint, params.requestInit);
-  console.log("Comment response", commentResult);
+  console.log("Comment response", {
+    ...commentResult,
+    body: await commentResult.text(),
+  });
 }
 
 run().catch((error) => {
