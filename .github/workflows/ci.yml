@@ -38,6 +38,7 @@ jobs:
         env:
           CI: true
         run: |
+          touch .env
           pnpm build-verify
 
       # Step 5: Upload the generated image as an artifact
