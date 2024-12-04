@@ -1,6 +1,7 @@
 const fs = require("fs");
-const nodeFetch = require("node-fetch").default;
 const path = require("path");
+const NodeFormData = require("form-data");
+const nodeFetch = require("node-fetch").default;
 
 const [, , outputPath] = process.argv;
 const IMAGE_PATH = path.resolve(process.env.OUTPUT_PATH || outputPath);
@@ -12,14 +13,13 @@ async function uploadToCatbox(filePath) {
   const apiUrl = "https://catbox.moe/user/api.php";
 
   // Create a form data object
-  const formData = new FormData();
+  const formData = new NodeFormData();
   formData.append("reqtype", "fileupload"); // Required parameter for Catbox
-  // @ts-ignore - Ignore type checking for {ReadStream}, as it's valid JS
   formData.append("fileToUpload", fs.createReadStream(filePath)); // Append the file to upload
 
   try {
     // Make the POST request to upload the file
-    const response = await fetch(apiUrl, {
+    const response = await nodeFetch(apiUrl, {
       method: "POST",
       body: formData,
     });
