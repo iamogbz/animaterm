@@ -99,6 +99,7 @@ function getTerminalLines(state) {
  * @param {{ terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
+  // TODO: include line numbers in the output
   const lines = getTerminalLines(state);
   return lines.slice(-config.lineCount);
 }
@@ -146,7 +147,7 @@ function recordFrame(state) {
  * @param {{ outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
-  // delay last frame for easy grok
+  // FIX: delay last frame for easy grok
   await delay(config.animation.timing.secondMs * 5);
   recordFrame(state);
   const { outputPath } = state;
@@ -176,7 +177,7 @@ function abortExecution(state, errorMessage) {
 /**
   @type {
     Record<string, (
-      step: {action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeoutMs: number},
+      step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
       state: { pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
@@ -216,7 +217,7 @@ const actionsRegistry = Object.freeze({
         child.on("exit", async () => {
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
-          // wait for a while between executed commands
+          // FIX: wait for a while between executed commands
           await delay(config.animation.timing.secondMs);
           updateTerminal(state);
           resolve();
@@ -242,7 +243,7 @@ const actionsRegistry = Object.freeze({
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    // wait for a while after pasting
+    // FIX: wait for a while after pasting
     await delay(config.animation.timing.secondMs);
     updateTerminal(state);
   },
