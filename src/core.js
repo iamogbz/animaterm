@@ -8,6 +8,7 @@ const { exec } = require("child_process");
 // constants
 const TOKEN_NL = "\n";
 
+// TODO: export config
 const config = {
   title: "Automated Terminal Interaction Animation",
   lineCount: 24,
