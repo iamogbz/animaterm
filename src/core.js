@@ -132,7 +132,7 @@ function recordFrame(state) {
     ctx.fillText(
       line,
       config.dimensionsPx.padding.left,
-      config.dimensionsPx.padding.top + index * config.dimensionsPx.text
+      config.dimensionsPx.padding.top + index * config.dimensionsPx.lineHeight
     );
   });
 
@@ -216,6 +216,7 @@ const actionsRegistry = Object.freeze({
           updateTerminal(state);
           // wait for a while between executed commands
           await delay(config.animation.timing.secondMs);
+          updateTerminal(state);
           resolve();
         });
 
@@ -232,14 +233,16 @@ const actionsRegistry = Object.freeze({
         throw Error(`Timeout waiting for output: "${payload}"`);
       }
       await delay(config.animation.timing.secondMs);
+      updateTerminal(state);
     }
   },
   paste: async (_, state) => {
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    // TODO: use wait for output here to confirm paste is complete
-    await delay(config.animation.timing.secondMs / 2);
+    // wait for a while after pasting
+    await delay(config.animation.timing.secondMs);
+    updateTerminal(state);
   },
   copy: async (step, state) => {
     if (typeof step.payload !== "object")
