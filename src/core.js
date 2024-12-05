@@ -1,5 +1,4 @@
-const { ChildProcess, exec, spawn } = require("child_process");
-const fs = require("fs");
+const { ChildProcess, spawn } = require("child_process");
 const path = require("path");
 
 // Configuration
@@ -104,93 +103,82 @@ async function executeSteps(process, steps) {
     console.error("Error [step]:", data);
   });
 
-  for (const step of steps) {
-    switch (step.action) {
-      case "type": {
-        await simulateTyping(process, `${step.payload}`);
-      }
-      case "enter": {
-        simulateEnter(process);
-      }
-      case "waitForOutput": {
-        await new Promise((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            reject(new Error(`Timeout waiting for output: "${step.payload}"`));
-          }, step.timeout || DEFAULT_TIMEOUT_MS);
+  try {
+    for (const step of steps) {
+      switch (step.action) {
+        case "type": {
+          await simulateTyping(process, `${step.payload}`);
+        }
+        case "enter": {
+          simulateEnter(process);
+        }
+        case "waitForOutput": {
+          await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+              reject(
+                new Error(`Timeout waiting for output: "${step.payload}"`)
+              );
+            }, step.timeout || DEFAULT_TIMEOUT_MS);
 
-          const interval = setInterval(() => {
-            if (output.includes(`${step.payload}`)) {
-              clearTimeout(timeout);
-              clearInterval(interval);
-              resolve(null);
-            }
-          }, 100);
-        });
-      }
-      case "paste": {
-        simulatePaste(process, clipboard);
-      }
-      case "copy": {
-        if (typeof step.payload !== "object")
-          throw Error(`Faulty payload: ${JSON.stringify(step)}`);
-        clipboard = captureOutput(
-          output,
-          { line: step.payload.startLine, position: step.payload.startPos },
-          { line: step.payload.endLine, position: step.payload.endPos }
-        );
-        console.log("Copied", clipboard);
-      }
-      case "clear": {
-        clearTerminal(process);
-      }
-      default: {
-        console.error("Unknown action:", step.action);
+            const interval = setInterval(() => {
+              if (output.includes(`${step.payload}`)) {
+                clearTimeout(timeout);
+                clearInterval(interval);
+                resolve(null);
+              }
+            }, 100);
+          });
+        }
+        case "paste": {
+          simulatePaste(process, clipboard);
+        }
+        case "copy": {
+          if (typeof step.payload !== "object")
+            throw Error(`Faulty payload: ${JSON.stringify(step)}`);
+          clipboard = captureOutput(
+            output,
+            { line: step.payload.startLine, position: step.payload.startPos },
+            { line: step.payload.endLine, position: step.payload.endPos }
+          );
+          console.log("Copied", clipboard);
+        }
+        case "clear": {
+          clearTerminal(process);
+        }
+        default: {
+          console.error("Unknown action:", step.action);
+        }
       }
     }
+  } catch (e) {
+    console.error("Error during step execution:", e.message);
   }
 }
 
 /**
  * Record a session using Terminalizer CLI
  * @param {string} outputPath
- * @returns {Promise<ChildProcess>}
+ * @returns {ChildProcess}
  */
 function startRecording(outputPath) {
   const paths = getPaths(outputPath);
-
-  // Ensure recording directory exists
-  if (!fs.existsSync(paths.recordingDir)) {
-    fs.mkdirSync(paths.recordingDir, { recursive: true });
-  }
-
-  return new Promise((resolve, reject) => {
-    const execCmd = `terminalizer record ${paths.recordingData}`;
-    const process = exec(execCmd, { shell: "bash" });
-
-    console.log("Start recording", execCmd);
-
-    process.on("error", (error) => {
-      reject(error);
-    });
-
-    process.stdin?.write('echo "Recording started..."\n');
-    resolve(process);
-  });
+  return spawn(
+    "terminalizer",
+    ["record", paths.recordingName, "--directory", paths.recordingDir],
+    {
+      stdio: ["pipe", "pipe", "pipe"],
+      shell: true,
+    }
+  );
 }
 
 /**
  * Stop recording
  * @param {ChildProcess} process
- * @returns {Promise<void>}
  */
 function stopRecording(process) {
-  return new Promise((resolve) => {
-    process.stdin?.end();
-    process.on("close", () => {
-      console.log("Recording complete");
-      resolve();
-    });
-  });
+  process.stdin?.write("\x04"); // Send EOF to terminate recording
+  process.stdin?.end();
 }
 
 /**
@@ -202,17 +190,22 @@ function renderRecording(outputPath) {
   const paths = getPaths(outputPath);
 
   return new Promise((resolve, reject) => {
-    exec(
-      `terminalizer render ${paths.recordingName} --output ${paths.recordingDir}`,
-      (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          console.log("Recording rendered to", paths.renderedPath);
-          resolve();
-        }
+    const renderProcess = spawn(
+      "terminalizer",
+      ["render", paths.recordingData],
+      {
+        shell: true,
       }
     );
+
+    renderProcess.on("close", (code) => {
+      if (code === 0) {
+        console.log("Recording rendered to", paths.renderedPath);
+        resolve();
+      } else {
+        reject(new Error("Failed to render the recording."));
+      }
+    });
   });
 }
 
@@ -226,13 +219,13 @@ async function simulateSteps(steps, outputPath) {
   let recorderProcess = null;
 
   try {
-    recorderProcess = await startRecording(outputPath);
-    await executeSteps(recorderProcess, steps);
+    recorderProcess = startRecording(outputPath);
+    // await executeSteps(recorderProcess, steps);
   } catch (error) {
     console.error("Unexpected error:", error.message);
   } finally {
     if (recorderProcess) {
-      await stopRecording(recorderProcess);
+      stopRecording(recorderProcess);
       await renderRecording(outputPath);
     }
   }
