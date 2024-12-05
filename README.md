@@ -1,8 +1,24 @@
 # Animaterm
 
+📟 Create animated terminal gifs from script
+
 ## Usage
 
+Install from the github repo
+
+```sh
+npm i -g 'github:iamogbz/animaterm#main'
+```
+
+Run the `animaterm` bin with cli options
+
+```sh
+animaterm script.json output.gif
+```
+
 ![demo](./docs/usage.gif)
+
+> This demo gif was created using only animaterm
 
 ### Script
 
@@ -56,7 +72,7 @@ Wait for data in `payload` to be displayed in the terminal
 
 ### Config
 
-TODO: add instructions on overriding the default config
+> TODO: add instructions on overriding the default config
 
 ## Inspirations
 
