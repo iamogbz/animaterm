@@ -13,12 +13,13 @@
   ],
   "scripts": {
     "build-comment": "node --env-file=.env 'scripts/comment.js'",
-    "build-verify": "animaterm 'e2e/script1.json'",
+    "build-verify": "node  --env-file=.env src/index.js 'e2e/script1.json'",
     "build-demo": "animaterm 'e2e/usage.json' 'docs/usage.gif'",
     "test": "jest --detectOpenHandles",
     "type-check": "tsc"
   },
   "dependencies": {
+    "animaterm": "link:",
     "blessed": "^0.1.81",
     "canvas": "^2.11.2",
     "form-data": "^4.0.1",
