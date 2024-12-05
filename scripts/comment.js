@@ -4,7 +4,8 @@ const NodeFormData = require("form-data");
 const nodeFetch = require("node-fetch").default;
 
 const [, , outputPath] = process.argv;
-const IMAGE_PATH = path.resolve(process.env.OUTPUT_PATH || outputPath);
+const finalOutputPath = outputPath || process.env.OUTPUT_PATH || outputPath;
+const IMAGE_PATH = path.resolve(finalOutputPath);
 // const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 

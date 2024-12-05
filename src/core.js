@@ -200,6 +200,7 @@ const actionsRegistry = Object.freeze({
     updateTerminal(state);
     return new Promise((resolve, reject) => {
       if (toExecute) {
+        // TODO: preserve env variables e.g. PATH, updated between child processes
         const child = exec(toExecute, {});
 
         child.stdout?.on("data", (data) => {

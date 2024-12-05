@@ -1,9 +1,10 @@
 const path = require("path");
 const { simulateSteps } = require("./core");
 
-// Example script demonstrating extensibility
 const [, _, scriptPath, outputPath] = process.argv;
+// prefer using the path provided in the terminal but fallback to env config
+const finalOutputPath = outputPath || process.env.OUTPUT_PATH || outputPath;
 const script = require(path.resolve(scriptPath));
 
 // Run the simulation
-simulateSteps(script, path.resolve(process.env.OUTPUT_PATH || outputPath));
+simulateSteps(script, path.resolve(finalOutputPath));
