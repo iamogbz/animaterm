@@ -1,21 +1,43 @@
 const fs = require("fs");
 const path = require("path");
+const NodeFormData = require("form-data");
+const nodeFetch = require("node-fetch").default;
 
 const [, , outputPath] = process.argv;
 const finalOutputPath = outputPath || process.env.OUTPUT_PATH || outputPath;
 const IMAGE_PATH = path.resolve(finalOutputPath);
+// const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 
-async function generateImageDataURL(filePath) {
+async function uploadToCatbox(filePath) {
+  // Catbox upload endpoint
+  const apiUrl = "https://catbox.moe/user/api.php";
+
+  // Create a form data object
+  const formData = new NodeFormData();
+  formData.append("reqtype", "fileupload"); // Required parameter for Catbox
+  formData.append("fileToUpload", fs.createReadStream(filePath)); // Append the file to upload
+
   try {
-    const imageBuffer = fs.readFileSync(filePath);
-    const imageExt = filePath.split(".").pop();
-    const base64Image = imageBuffer.toString("base64");
-    const dataURL = `data:image/${imageExt};base64,${base64Image}`;
-    return dataURL;
+    // Make the POST request to upload the file
+    const response = await nodeFetch(apiUrl, {
+      method: "POST",
+      body: formData,
+    });
+
+    // Parse the response text
+    const responseText = await response.text();
+
+    if (response.ok) {
+      console.log("File uploaded successfully! URL:", responseText);
+      return responseText; // Return the URL of the uploaded file
+    } else {
+      console.error("Failed to upload file. Response:", responseText);
+      throw new Error(`File upload failed: ${filePath}`);
+    }
   } catch (error) {
-    console.error("Error generating data URL:", error);
-    throw error; // Re-throw to handle in the calling function
+    console.error("Error uploading file:", error);
+    throw error;
   }
 }
 
@@ -25,7 +47,7 @@ async function run() {
   const [owner, repo] = github.repository.split("/");
   const { event_name, event, sha } = github;
 
-  const imageUrl = await generateImageDataURL(IMAGE_PATH);
+  const imageUrl = await uploadToCatbox(IMAGE_PATH);
   const imageMarkdown = `![Generated Image](${imageUrl})`;
 
   const commentBody = `${COMMENT_IDENTIFIER}\n${imageMarkdown}`;
@@ -46,7 +68,7 @@ async function run() {
   };
 
   // Get existing comments
-  const existingComments = await fetch(commentsEndpoint, { headers }).then(
+  const existingComments = await nodeFetch(commentsEndpoint, { headers }).then(
     (res) => res.json()
   );
 
@@ -85,7 +107,7 @@ async function run() {
   }
 
   console.log("Comment request", params);
-  const commentResult = await fetch(params.endpoint, params.requestInit);
+  const commentResult = await nodeFetch(params.endpoint, params.requestInit);
   console.log("Comment response", {
     body: await commentResult.text(),
     status: commentResult.status,
