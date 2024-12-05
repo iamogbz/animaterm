@@ -6,6 +6,9 @@ const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
 
+// constants
+const TOKEN_NL = "\n";
+
 // Terminal simulation setup
 const screen = blessed.screen({
   smartCSR: true,
@@ -35,6 +38,7 @@ screen.append(terminalBox);
 // Canvas and GIF setup
 const width = 800;
 const height = 600;
+const renderLineCount = height / 20 - 1;
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
 const encoder = new GIFEncoder(width, height);
@@ -44,11 +48,35 @@ encoder.setDelay(500); // frame delay in ms
 encoder.setQuality(10);
 
 /**
+ * Get all lines that have been displayed in the terminal as list
+ * @param {{ terminalContent: string; }} state
+ */
+function getTerminalLines(state) {
+  return state.terminalContent.split(TOKEN_NL);
+}
+
+/**
+ * Get visible lines from the terminal content as list
+ * @param {{ terminalContent: string; }} state
+ */
+function getVisibleTerminalLines(state) {
+  const lines = getTerminalLines(state);
+  return lines.slice(-renderLineCount);
+}
+/**
+ * Get visible lines from the terminal content as single string blob
+ * @param {{ terminalContent: string; }} state
+ */
+function getVisibleTerminalContent(state) {
+  return getVisibleTerminalLines(state).join(TOKEN_NL);
+}
+
+/**
  * Update the terminal's display content
  * @param {{ terminalContent: any; clipboard?: string; }} state
  */
 function updateTerminal(state) {
-  terminalBox.setContent(state.terminalContent);
+  terminalBox.setContent(getVisibleTerminalContent(state));
   screen.render();
   recordFrame(state);
 }
@@ -62,8 +90,7 @@ function recordFrame(state) {
   ctx.fillRect(0, 0, width, height);
   ctx.font = "16px monospace";
   ctx.fillStyle = "white";
-  const lines = state.terminalContent.split("\n");
-  lines.forEach((line, index) => {
+  getVisibleTerminalLines(state).forEach((line, index) => {
     ctx.fillText(line, 10, 20 + index * 20);
   });
 
@@ -93,11 +120,11 @@ async function finishRecording(state, exitCode = 0) {
  * @param {string} errorMessage
  */
 function abortExecution(state, errorMessage) {
-  const executionError = `\nERROR: ${errorMessage}`;
+  const executionError = `${TOKEN_NL}ERROR: ${errorMessage}`;
   console.error(executionError);
   // print error to recorded terminal
   state.pendingExecution = "";
-  state.terminalContent += `\n${executionError}`;
+  state.terminalContent += `${TOKEN_NL}${executionError}`;
   updateTerminal(state);
   return finishRecording(state, 1);
 }
@@ -126,7 +153,7 @@ const actionsRegistry = Object.freeze({
   enter: async (_, state) => {
     const toExecute = state.pendingExecution.trim();
     state.pendingExecution = "";
-    state.terminalContent += "\n";
+    state.terminalContent += TOKEN_NL;
     updateTerminal(state);
     return new Promise((resolve, reject) => {
       // If payload is provided, execute it as a command.
@@ -146,7 +173,7 @@ const actionsRegistry = Object.freeze({
         });
 
         child.on("exit", () => {
-          state.terminalContent += "\n"; // Add newline after command execution
+          state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
           resolve();
         });
@@ -176,7 +203,7 @@ const actionsRegistry = Object.freeze({
     if (typeof step.payload !== "object")
       throw Error(`Faulty payload: ${JSON.stringify(step)}`);
     const { startLine, startPos, endLine, endPos } = step.payload;
-    const lines = state.terminalContent.split("\n");
+    const lines = getTerminalLines(state);
     const textToCopy = lines
       .slice(startLine - 1, endLine)
       .map((line, idx) => {
@@ -184,8 +211,9 @@ const actionsRegistry = Object.freeze({
         if (idx === endLine - startLine) return line.slice(0, endPos);
         return line;
       })
-      .join("\n");
+      .join(TOKEN_NL);
     state.clipboard = textToCopy;
+    // TODO fix error cannot read properties of undefined writeSync
     clipboardy.writeSync(state.clipboard);
   },
   clear: async (_, state) => {

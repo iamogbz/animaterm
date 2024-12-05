@@ -1,4 +1,6 @@
 [
+  { "action": "type", "payload": "seq 1 100" },
+  { "action": "enter" },
   { "action": "type", "payload": "echo 'Hello, world!'" },
   { "action": "enter" },
   { "action": "type", "payload": "ls -la" },
