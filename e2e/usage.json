@@ -8,7 +8,7 @@
   { "action": "type", "payload": "\n# USAGE EXAMPLE BEGINS BELOW\n\n" },
   {
     "action": "type",
-    "payload": "animaterm demo.json recording/demo.gif > /dev/null 2>&1"
+    "payload": "animaterm demo.json recordings/demo.gif > /dev/null 2>&1"
   },
   { "action": "enter" },
   {
