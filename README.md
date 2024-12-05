@@ -6,7 +6,7 @@
 
 ### Script
 
-Samples available in the [scripts folder](./scripts/).
+Samples available in the [end-to-end scripts](./e2e/).
 
 This is a `JSON` file with the following structure:
 
