@@ -1,5 +1,4 @@
 const blessed = require("blessed");
-const clipboardy = require("clipboardy").default;
 const { createCanvas } = require("canvas");
 const GIFEncoder = require("gifencoder");
 const fs = require("fs");
@@ -146,8 +145,8 @@ const actionsRegistry = Object.freeze({
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      const minTypeSpeedMs = 10;
-      await delay(Math.random() * minTypeSpeedMs + minTypeSpeedMs);
+      const minTypeSpeedMs = 100;
+      await delay((1 + Math.random()) * minTypeSpeedMs);
     }
   },
   enter: async (_, state) => {
@@ -213,8 +212,6 @@ const actionsRegistry = Object.freeze({
       })
       .join(TOKEN_NL);
     state.clipboard = textToCopy;
-    // TODO fix error cannot read properties of undefined writeSync
-    clipboardy.writeSync(state.clipboard);
   },
   clear: async (_, state) => {
     state.pendingExecution = "";
