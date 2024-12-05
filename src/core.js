@@ -4,6 +4,7 @@ const { createCanvas } = require("canvas");
 const GIFEncoder = require("gifencoder");
 const fs = require("fs");
 const path = require("path");
+const { exec } = require("child_process");
 
 // Terminal simulation setup
 const screen = blessed.screen({
@@ -88,13 +89,14 @@ async function finishRecording(state, exitCode = 0) {
 
 /**
  * Utility to throw an error and abort execution
- * @param {{ clipboard?: string | undefined; outputPath: string; terminalContent: string; }} state
+ * @param {{ clipboard?: string | undefined; outputPath: string; pendingExecution: string; terminalContent: string; }} state
  * @param {string} errorMessage
  */
 function abortExecution(state, errorMessage) {
   const executionError = `\nERROR: ${errorMessage}`;
   console.error(executionError);
   // print error to recorded terminal
+  state.pendingExecution = "";
   state.terminalContent += `\n${executionError}`;
   updateTerminal(state);
   return finishRecording(state, 1);
@@ -105,13 +107,15 @@ function abortExecution(state, errorMessage) {
   @type {
     Record<string, (
       step: {action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeout: number},
-      state: { terminalContent: string; clipboard: string; }
+      state: { pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
 */
 const actionsRegistry = Object.freeze({
   type: async ({ payload }, state) => {
-    for (const char of `${payload}`) {
+    const text = `${payload}`;
+    state.pendingExecution += text;
+    for (const char of text) {
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
@@ -120,9 +124,38 @@ const actionsRegistry = Object.freeze({
     }
   },
   enter: async (_, state) => {
+    const toExecute = state.pendingExecution.trim();
+    state.pendingExecution = "";
     state.terminalContent += "\n";
     updateTerminal(state);
-    await delay(500);
+    return new Promise((resolve, reject) => {
+      // If payload is provided, execute it as a command.
+      // Otherwise, just add a newline.  This allows 'enter' to be used
+      // both to execute commands and to simply add newlines to the terminal.
+      if (toExecute) {
+        const child = exec(toExecute, {});
+
+        child.stdout?.on("data", (data) => {
+          state.terminalContent += data;
+          updateTerminal(state);
+        });
+
+        child.stderr?.on("data", (data) => {
+          state.terminalContent += data;
+          updateTerminal(state);
+        });
+
+        child.on("exit", () => {
+          state.terminalContent += "\n"; // Add newline after command execution
+          updateTerminal(state);
+          resolve();
+        });
+
+        child.on("error", (error) => {
+          reject(error);
+        });
+      }
+    });
   },
   waitForOutput: async ({ payload, timeout = 5000 }, state) => {
     const startTime = Date.now();
@@ -134,6 +167,7 @@ const actionsRegistry = Object.freeze({
     }
   },
   paste: async (_, state) => {
+    state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
     await delay(500);
@@ -155,6 +189,7 @@ const actionsRegistry = Object.freeze({
     clipboardy.writeSync(state.clipboard);
   },
   clear: async (_, state) => {
+    state.pendingExecution = "";
     state.terminalContent = "";
     updateTerminal(state);
   },
@@ -175,6 +210,7 @@ async function simulateSteps(steps, outputPath) {
   const state = {
     clipboard: "",
     outputPath,
+    pendingExecution: "",
     terminalContent: "",
   };
 
