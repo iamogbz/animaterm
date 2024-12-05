@@ -40,6 +40,7 @@ jobs:
         continue-on-error: true
         run: |
           touch .env
+          export PATH=".:$PATH"
           pnpm build-verify
 
       # Step 5: Upload the generated image as an artifact
