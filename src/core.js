@@ -1,168 +1,219 @@
-const blessed = require("blessed");
-const clipboardy = require("clipboardy").default;
-const { createCanvas } = require("canvas");
-const GIFEncoder = require("gifencoder");
+const { ChildProcess, exec, spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-// Terminal simulation setup
-const screen = blessed.screen({
-  smartCSR: true,
-  title: "Automated Terminal Interaction Animation",
-});
-
-const terminalBox = blessed.box({
-  top: "center",
-  left: "center",
-  width: "80%",
-  height: "80%",
-  content: "",
-  tags: true,
-  border: {
-    type: "line",
-  },
-  style: {
-    fg: "white",
-    border: {
-      fg: "#f0f0f0",
-    },
-  },
-});
-
-screen.append(terminalBox);
-
-// Canvas and GIF setup
-const width = 800;
-const height = 600;
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext("2d");
-const encoder = new GIFEncoder(width, height);
-encoder.start();
-encoder.setRepeat(0); // 0 = loop forever
-encoder.setDelay(500); // frame delay in ms
-encoder.setQuality(10);
+// Configuration
+const RECORDING_EXT = ".yml";
+const ANIMATION_EXT = ".gif";
+const DEFAULT_TIMEOUT_MS = 3000;
 
 /**
- * Update the terminal's display content
- * @param {{ terminalContent: any; clipboard?: string; }} state
+ * Get paths to recording data
+ * @param {string} outputPath
  */
-function updateTerminal(state) {
-  terminalBox.setContent(state.terminalContent);
-  screen.render();
-  recordFrame(state);
+function getPaths(outputPath) {
+  const resolvedPath = path.resolve(outputPath);
+  const recordingName = path.basename(resolvedPath, ANIMATION_EXT);
+  const recordingDir = path.dirname(resolvedPath);
+
+  return Object.freeze({
+    recordingDir,
+    recordingName,
+    recordingData: path.join(recordingDir, `${recordingName}${RECORDING_EXT}`),
+    renderedPath: path.join(recordingDir, `${recordingName}${ANIMATION_EXT}`),
+  });
 }
 
 /**
- * Record a frame of the terminal state
- * @param {{ terminalContent: string; }} state
+ * Simulates typing a command character by character
+ * @param {ChildProcess} process
+ * @param {string} text
+ * @param {number} delayMs
  */
-function recordFrame(state) {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, width, height);
-  ctx.font = "16px monospace";
-  ctx.fillStyle = "white";
-  const lines = state.terminalContent.split("\n");
-  lines.forEach((line, index) => {
-    ctx.fillText(line, 10, 20 + index * 20);
+async function simulateTyping(process, text, delayMs = 30) {
+  for (const char of text) {
+    process.stdin?.write(char);
+    const timeoutMs = ((1 + Math.random()) * delayMs) / 2;
+    await new Promise((resolve) => setTimeout(resolve, timeoutMs));
+  }
+}
+
+/**
+ * Simulates pressing "Enter"
+ * @param {ChildProcess} process
+ */
+function simulateEnter(process) {
+  process.stdin?.write("\n");
+}
+
+/**
+ * Captures specific output for copy simulation
+ * @param {string} output
+ * @param {{ line: number; position: number; }} start
+ * @param {{ line: number; position: number; }} end
+ */
+function captureOutput(output, start, end) {
+  const lines = output.split("\n");
+  const selectedLines = lines.slice(start.line - 1, end.line);
+  return selectedLines
+    .map((line, i) => {
+      if (i === 0 && i === selectedLines.length - 1) {
+        return line.slice(start.position, end.position);
+      } else if (i === 0) {
+        return line.slice(start.position);
+      } else if (i === selectedLines.length - 1) {
+        return line.slice(0, end.position);
+      }
+      return line;
+    })
+    .join("\n");
+}
+
+/**
+ * Simulates pasting text
+ * @param {ChildProcess} process
+ * @param {string} text
+ */
+function simulatePaste(process, text) {
+  process.stdin?.write(text);
+}
+
+/**
+ * Clears the terminal
+ * @param {ChildProcess} process
+ */
+function clearTerminal(process) {
+  process.stdin?.write("\u001b[2J\u001b[0;0H");
+}
+
+/**
+ * Executes steps from the JSON configuration
+ * @param {ChildProcess} process
+ * @param {{action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeout: number}[]} steps
+ */
+async function executeSteps(process, steps) {
+  let output = "";
+  let clipboard = "";
+
+  process.stdout?.on("data", (/** @type {unknown} */ data) => {
+    output += `${data}`;
+    console.log(data);
   });
 
-  // @ts-ignore - Ignore type checking for {CanvasRenderingContext2D}, as it's valid JS
-  encoder.addFrame(ctx);
-}
+  process.stderr?.on("data", (/** @type {unknown} */ data) => {
+    console.error("Error [step]:", data);
+  });
 
-/**
- * Utility to terminate and save recording
- * @param {{ outputPath: string; terminalContent: string; }} state
- */
-async function finishRecording(state, exitCode = 0) {
-  // delay last frame for easy grok
-  await delay(2000);
-  recordFrame(state);
-  const { outputPath } = state;
-  encoder.finish();
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, encoder.out.getData());
-  console.log(`Recording saved as '${outputPath}'`);
-  process.exit(exitCode);
-}
-
-/**
- * Utility to throw an error and abort execution
- * @param {{ clipboard?: string | undefined; outputPath: string; terminalContent: string; }} state
- * @param {string} errorMessage
- */
-function abortExecution(state, errorMessage) {
-  const executionError = `\nERROR: ${errorMessage}`;
-  console.error(executionError);
-  // print error to recorded terminal
-  state.terminalContent += `\n${executionError}`;
-  updateTerminal(state);
-  return finishRecording(state, 1);
-}
-
-// Registry of actions with their implementation
-/**
-  @type {
-    Record<string, (
-      step: {action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeout: number},
-      state: { terminalContent: string; clipboard: string; }
-    ) => Promise<void>>
-  }
-*/
-const actionsRegistry = Object.freeze({
-  type: async ({ payload }, state) => {
-    for (const char of `${payload}`) {
-      state.terminalContent += char;
-      updateTerminal(state);
-      // randomise type speed
-      const minTypeSpeedMs = 10;
-      await delay(Math.random() * minTypeSpeedMs + minTypeSpeedMs);
-    }
-  },
-  enter: async (_, state) => {
-    state.terminalContent += "\n";
-    updateTerminal(state);
-    await delay(500);
-  },
-  waitForOutput: async ({ payload, timeout = 5000 }, state) => {
-    const startTime = Date.now();
-    while (!state.terminalContent.includes(`${payload}`)) {
-      if (Date.now() - startTime > timeout) {
-        throw Error(`Timeout waiting for output: "${payload}"`);
+  for (const step of steps) {
+    switch (step.action) {
+      case "type": {
+        await simulateTyping(process, `${step.payload}`);
       }
-      await delay(100);
-    }
-  },
-  paste: async (_, state) => {
-    state.terminalContent += state.clipboard;
-    updateTerminal(state);
-    await delay(500);
-  },
-  copy: async (step, state) => {
-    if (typeof step.payload !== "object")
-      throw Error(`Faulty payload: ${JSON.stringify(step)}`);
-    const { startLine, startPos, endLine, endPos } = step.payload;
-    const lines = state.terminalContent.split("\n");
-    const textToCopy = lines
-      .slice(startLine - 1, endLine)
-      .map((line, idx) => {
-        if (idx === 0) return line.slice(startPos);
-        if (idx === endLine - startLine) return line.slice(0, endPos);
-        return line;
-      })
-      .join("\n");
-    state.clipboard = textToCopy;
-    clipboardy.writeSync(state.clipboard);
-  },
-  clear: async (_, state) => {
-    state.terminalContent = "";
-    updateTerminal(state);
-  },
-});
+      case "enter": {
+        simulateEnter(process);
+      }
+      case "waitForOutput": {
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error(`Timeout waiting for output: "${step.payload}"`));
+          }, step.timeout || DEFAULT_TIMEOUT_MS);
 
-// Delay function
-function delay(/** @type {number} */ ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+          const interval = setInterval(() => {
+            if (output.includes(`${step.payload}`)) {
+              clearTimeout(timeout);
+              clearInterval(interval);
+              resolve(null);
+            }
+          }, 100);
+        });
+      }
+      case "paste": {
+        simulatePaste(process, clipboard);
+      }
+      case "copy": {
+        if (typeof step.payload !== "object")
+          throw Error(`Faulty payload: ${JSON.stringify(step)}`);
+        clipboard = captureOutput(
+          output,
+          { line: step.payload.startLine, position: step.payload.startPos },
+          { line: step.payload.endLine, position: step.payload.endPos }
+        );
+        console.log("Copied", clipboard);
+      }
+      case "clear": {
+        clearTerminal(process);
+      }
+      default: {
+        console.error("Unknown action:", step.action);
+      }
+    }
+  }
+}
+
+/**
+ * Record a session using Terminalizer CLI
+ * @param {string} outputPath
+ * @returns {Promise<ChildProcess>}
+ */
+function startRecording(outputPath) {
+  const paths = getPaths(outputPath);
+
+  // Ensure recording directory exists
+  if (!fs.existsSync(paths.recordingDir)) {
+    fs.mkdirSync(paths.recordingDir, { recursive: true });
+  }
+
+  return new Promise((resolve, reject) => {
+    const execCmd = `terminalizer record ${paths.recordingData}`;
+    const process = exec(execCmd, { shell: "bash" });
+
+    console.log("Start recording", execCmd);
+
+    process.on("error", (error) => {
+      reject(error);
+    });
+
+    process.stdin?.write('echo "Recording started..."\n');
+    resolve(process);
+  });
+}
+
+/**
+ * Stop recording
+ * @param {ChildProcess} process
+ * @returns {Promise<void>}
+ */
+function stopRecording(process) {
+  return new Promise((resolve) => {
+    process.stdin?.end();
+    process.on("close", () => {
+      console.log("Recording complete");
+      resolve();
+    });
+  });
+}
+
+/**
+ * Render the recorded session
+ * @param {string} outputPath
+ * @returns {Promise<void>}
+ */
+function renderRecording(outputPath) {
+  const paths = getPaths(outputPath);
+
+  return new Promise((resolve, reject) => {
+    exec(
+      `terminalizer render ${paths.recordingName} --output ${paths.recordingDir}`,
+      (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          console.log("Recording rendered to", paths.renderedPath);
+          resolve();
+        }
+      }
+    );
+  });
 }
 
 /**
@@ -171,31 +222,20 @@ function delay(/** @type {number} */ ms) {
  * @param {string} outputPath
  */
 async function simulateSteps(steps, outputPath) {
-  // Run core simulation
-  const state = {
-    clipboard: "",
-    outputPath,
-    terminalContent: "",
-  };
-
-  const finish = () => finishRecording(state);
-  // Quit on Escape, q, or Ctrl+C
-  screen.key(["escape", "q", "C-c"], finish);
+  /** @type {ChildProcess | null} */
+  let recorderProcess = null;
 
   try {
-    for (const step of steps) {
-      const action = actionsRegistry[step.action];
-      if (action) {
-        await action(step, state);
-      } else {
-        await abortExecution(state, `Unknown action: ${step.action}`);
-      }
-    }
+    recorderProcess = await startRecording(outputPath);
+    await executeSteps(recorderProcess, steps);
   } catch (error) {
-    await abortExecution(state, `Unexpected error: ${error.message}`);
+    console.error("Unexpected error:", error.message);
+  } finally {
+    if (recorderProcess) {
+      await stopRecording(recorderProcess);
+      await renderRecording(outputPath);
+    }
   }
-
-  await finish();
 }
 
-module.exports = { encoder, screen, simulateSteps };
+module.exports = { simulateSteps };

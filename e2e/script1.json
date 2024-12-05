@@ -1,7 +1,7 @@
 [
   { "action": "type", "payload": "echo Hello, world!" },
   { "action": "enter" },
-  { "action": "waitForOutput", "payload": "Hello, world!", "timeout": 3000 },
+  { "action": "waitForOutput", "payload": "Hello, world!" },
   { "action": "type", "payload": "ls -la" },
   { "action": "enter" },
   { "action": "waitForOutput", "payload": "script1.json", "timeout": 5000 },
