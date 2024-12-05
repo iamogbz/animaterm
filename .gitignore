@@ -1,0 +1,6 @@
+build/
+node_modules/
+recordings/
+
+.env
+demo.json

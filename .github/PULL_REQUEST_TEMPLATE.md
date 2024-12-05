@@ -8,7 +8,7 @@
 
 ### Checklist
 
-- [ ] This PR has updated documentation
+- [ ] This PR has updated documentation (`npm run build-demo`)
 - [ ] This PR has sufficient testing
 
 ### Comments

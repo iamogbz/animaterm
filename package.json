@@ -1,0 +1,36 @@
+{
+  "name": "animaterm",
+  "version": "0.0.1",
+  "bin": {
+    "animaterm": "src/index.js"
+  },
+  "files": [
+    "src/**",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build-comment": "node --env-file=.env 'scripts/comment.js'",
+    "build-verify": "node  --env-file=.env src/index.js 'e2e/script1.json'",
+    "build-demo": "animaterm 'e2e/usage.json' 'docs/usage.gif'",
+    "test": "jest --detectOpenHandles",
+    "type-check": "tsc"
+  },
+  "dependencies": {
+    "animaterm": "link:",
+    "blessed": "^0.1.81",
+    "canvas": "^2.11.2",
+    "form-data": "^4.0.1",
+    "gifencoder": "^2.0.1"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.7.0",
+    "@types/react": "^19.0.0",
+    "jest": "^29.7.0",
+    "node-fetch": "^2.6.2",
+    "slash": "^5.1.0",
+    "typescript": "^5.7.2"
+  }
+}

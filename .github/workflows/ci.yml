@@ -1,0 +1,59 @@
+name: Demo current build
+
+on:
+  push:
+    branches:
+      - "**" # Runs on all branches
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  demo-current-build:
+    name: Demo current build
+    runs-on: ubuntu-latest
+    env:
+      OUTPUT_PATH: ./recordings/output.gif
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 9
+          run_install: |
+              args: [--no-frozen-lockfile]
+
+      # Step 4: Run the script to generate the image
+      - name: Run script to generate image
+        env:
+          CI: true
+        continue-on-error: true
+        run: |
+          touch .env
+          export PATH=".:$PATH"
+          pnpm build-verify
+
+      # Step 5: Upload the generated image as an artifact
+      - name: Upload generated image
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-image
+          path: ${{ env.OUTPUT_PATH }}
+
+      # Step 6: Post or update the comment
+      - name: Post or update comment
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm build-comment

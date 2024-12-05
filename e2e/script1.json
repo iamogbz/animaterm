@@ -1,0 +1,24 @@
+[
+  { "action": "type", "payload": "seq 1 100" },
+  { "action": "enter" },
+  { "action": "type", "payload": "echo 'Hello, world!'" },
+  { "action": "enter" },
+  { "action": "type", "payload": "ls -la" },
+  { "action": "enter" },
+  { "action": "waitForOutput", "payload": "package.json", "timeoutMs": 3000 },
+  { "action": "type", "payload": "cat package.json" },
+  { "action": "enter" },
+  { "action": "waitForOutput", "payload": "\"name\": \"animaterm\"" },
+  {
+    "action": "copy",
+    "payload": {
+      "startLine": 2,
+      "startPos": 0,
+      "endLine": 2,
+      "endPos": 10
+    }
+  },
+  { "action": "paste" },
+  { "action": "clear" },
+  { "action": "type", "payload": "Goodbye!" }
+]
