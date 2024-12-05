@@ -5,7 +5,7 @@
   { "action": "enter" },
   { "action": "type", "payload": "ls -la" },
   { "action": "enter" },
-  { "action": "waitForOutput", "payload": "package.json", "timeout": 5000 },
+  { "action": "waitForOutput", "payload": "package.json", "timeoutMs": 3000 },
   { "action": "type", "payload": "cat package.json" },
   { "action": "enter" },
   { "action": "waitForOutput", "payload": "\"name\": \"animaterm\"" },

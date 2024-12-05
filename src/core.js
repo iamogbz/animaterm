@@ -8,10 +8,56 @@ const { exec } = require("child_process");
 // constants
 const TOKEN_NL = "\n";
 
+const config = {
+  title: "Automated Terminal Interaction Animation",
+  dimensionsPx: {
+    width: 800,
+    height: 600,
+    gap: 4,
+    text: 16,
+    padding: {
+      left: 10,
+      top: 20,
+    },
+    get lineHeight() {
+      return this.text + this.gap;
+    },
+  },
+  animation: {
+    /** 0 means repeat forever */
+    repeat: 0,
+    quality: 10,
+    timing: {
+      secondMs: 1000,
+    },
+    fps: 15,
+    get delay() {
+      return this.timing.secondMs / this.fps;
+    },
+    typing: {
+      speedMs: 100,
+    },
+    /** @type {React.CSSProperties} */
+    css: {
+      backgroundColor: "black",
+      borderColor: "grey",
+      color: "white",
+      fontStyle: "monospace",
+      get fontSize() {
+        return `${config.dimensionsPx.text}px`;
+      },
+    },
+  },
+  get lineCount() {
+    const { height, padding, lineHeight } = this.dimensionsPx;
+    return Math.floor((height - padding.top * 2) / lineHeight);
+  },
+};
+
 // Terminal simulation setup
 const screen = blessed.screen({
   smartCSR: true,
-  title: "Automated Terminal Interaction Animation",
+  title: config.title,
 });
 
 const terminalBox = blessed.box({
@@ -24,27 +70,20 @@ const terminalBox = blessed.box({
   border: {
     type: "line",
   },
-  style: {
-    fg: "white",
-    border: {
-      fg: "#f0f0f0",
-    },
-  },
+  bg: "transparent",
 });
 
 screen.append(terminalBox);
 
 // Canvas and GIF setup
-const width = 800;
-const height = 600;
-const renderLineCount = height / 20 - 1;
+const { height, width } = config.dimensionsPx;
 const canvas = createCanvas(width, height);
 const ctx = canvas.getContext("2d");
 const encoder = new GIFEncoder(width, height);
 encoder.start();
-encoder.setRepeat(0); // 0 = loop forever
-encoder.setDelay(500); // frame delay in ms
-encoder.setQuality(10);
+encoder.setRepeat(config.animation.repeat);
+encoder.setDelay(config.animation.delay);
+encoder.setQuality(config.animation.quality);
 
 /**
  * Get all lines that have been displayed in the terminal as list
@@ -60,7 +99,7 @@ function getTerminalLines(state) {
  */
 function getVisibleTerminalLines(state) {
   const lines = getTerminalLines(state);
-  return lines.slice(-renderLineCount);
+  return lines.slice(-config.lineCount);
 }
 /**
  * Get visible lines from the terminal content as single string blob
@@ -85,12 +124,16 @@ function updateTerminal(state) {
  * @param {{ terminalContent: string; }} state
  */
 function recordFrame(state) {
-  ctx.fillStyle = "black";
+  ctx.fillStyle = config.animation.css.backgroundColor;
   ctx.fillRect(0, 0, width, height);
-  ctx.font = "16px monospace";
-  ctx.fillStyle = "white";
+  ctx.font = `${config.animation.css.fontSize} ${config.animation.css.fontStyle}`;
+  ctx.fillStyle = config.animation.css.color;
   getVisibleTerminalLines(state).forEach((line, index) => {
-    ctx.fillText(line, 10, 20 + index * 20);
+    ctx.fillText(
+      line,
+      config.dimensionsPx.padding.left,
+      config.dimensionsPx.padding.top + index * config.dimensionsPx.text
+    );
   });
 
   // @ts-ignore - Ignore type checking for {CanvasRenderingContext2D}, as it's valid JS
@@ -103,7 +146,7 @@ function recordFrame(state) {
  */
 async function finishRecording(state, exitCode = 0) {
   // delay last frame for easy grok
-  await delay(2000);
+  await delay(config.animation.timing.secondMs * 5);
   recordFrame(state);
   const { outputPath } = state;
   encoder.finish();
@@ -132,7 +175,7 @@ function abortExecution(state, errorMessage) {
 /**
   @type {
     Record<string, (
-      step: {action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeout: number},
+      step: {action:string; payload: string | {startLine: number, endLine: number, startPos: number, endPos:number}; timeoutMs: number},
       state: { pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
@@ -145,19 +188,16 @@ const actionsRegistry = Object.freeze({
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      const minTypeSpeedMs = 100;
-      await delay((1 + Math.random()) * minTypeSpeedMs);
+      await delay((1 + Math.random()) * config.animation.typing.speedMs);
     }
   },
   enter: async (_, state) => {
+    // execute the last set of instructions typed
     const toExecute = state.pendingExecution.trim();
     state.pendingExecution = "";
     state.terminalContent += TOKEN_NL;
     updateTerminal(state);
     return new Promise((resolve, reject) => {
-      // If payload is provided, execute it as a command.
-      // Otherwise, just add a newline.  This allows 'enter' to be used
-      // both to execute commands and to simply add newlines to the terminal.
       if (toExecute) {
         const child = exec(toExecute, {});
 
@@ -171,9 +211,11 @@ const actionsRegistry = Object.freeze({
           updateTerminal(state);
         });
 
-        child.on("exit", () => {
+        child.on("exit", async () => {
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
+          // wait for a while between executed commands
+          await delay(config.animation.timing.secondMs);
           resolve();
         });
 
@@ -183,20 +225,21 @@ const actionsRegistry = Object.freeze({
       }
     });
   },
-  waitForOutput: async ({ payload, timeout = 5000 }, state) => {
+  waitForOutput: async ({ payload, timeoutMs = 5000 }, state) => {
     const startTime = Date.now();
     while (!state.terminalContent.includes(`${payload}`)) {
-      if (Date.now() - startTime > timeout) {
+      if (Date.now() - startTime > timeoutMs) {
         throw Error(`Timeout waiting for output: "${payload}"`);
       }
-      await delay(100);
+      await delay(config.animation.timing.secondMs);
     }
   },
   paste: async (_, state) => {
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    await delay(500);
+    // TODO: use wait for output here to confirm paste is complete
+    await delay(config.animation.timing.secondMs / 2);
   },
   copy: async (step, state) => {
     if (typeof step.payload !== "object")
