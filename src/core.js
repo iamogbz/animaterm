@@ -10,33 +10,24 @@ const TOKEN_NL = "\n";
 
 const config = {
   title: "Automated Terminal Interaction Animation",
+  lineCount: 24,
   dimensionsPx: {
-    width: 800,
-    height: 600,
     gap: 4,
-    text: 16,
     padding: {
-      left: 10,
-      top: 20,
+      x: 10,
+      y: 20,
+    },
+    text: 16,
+    width: 800,
+    get height() {
+      // NOTE: hacky for some reason sizing does not line up exactly
+      return this.lineHeight * config.lineCount + this.padding.y / 2;
     },
     get lineHeight() {
       return this.text + this.gap;
     },
   },
   animation: {
-    /** 0 means repeat forever */
-    repeat: 0,
-    quality: 10,
-    timing: {
-      secondMs: 1000,
-    },
-    fps: 15,
-    get delay() {
-      return this.timing.secondMs / this.fps;
-    },
-    typing: {
-      speedMs: 100,
-    },
     /** @type {React.CSSProperties} */
     css: {
       backgroundColor: "black",
@@ -47,10 +38,19 @@ const config = {
         return `${config.dimensionsPx.text}px`;
       },
     },
-  },
-  get lineCount() {
-    const { height, padding, lineHeight } = this.dimensionsPx;
-    return Math.floor((height - padding.top * 2) / lineHeight);
+    fps: 15,
+    quality: 10,
+    /** 0 means repeat forever */
+    repeat: 0,
+    timing: {
+      secondMs: 1000,
+    },
+    typing: {
+      speedMs: 100,
+    },
+    get delay() {
+      return this.timing.secondMs / this.fps;
+    },
   },
 };
 
@@ -131,8 +131,8 @@ function recordFrame(state) {
   getVisibleTerminalLines(state).forEach((line, index) => {
     ctx.fillText(
       line,
-      config.dimensionsPx.padding.left,
-      config.dimensionsPx.padding.top + index * config.dimensionsPx.lineHeight
+      config.dimensionsPx.padding.x,
+      config.dimensionsPx.padding.y + index * config.dimensionsPx.lineHeight
     );
   });
 
