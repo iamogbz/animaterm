@@ -47,7 +47,7 @@ const config = {
       secondMs: 1000,
     },
     typing: {
-      speedMs: 15,
+      speedMs: 10,
     },
     get delay() {
       return this.timing.secondMs / this.fps;
@@ -268,7 +268,7 @@ const actionsRegistry = Object.freeze({
  * @param {number} ms
  */
 function delay(state, ms) {
-  const frameCount = config.animation.fps * (ms / config.animation.timing.secondMs);
+  const frameCount = Math.floor(config.animation.fps * (ms / config.animation.timing.secondMs));
   for (let i = 0; i < frameCount; i++) {
     recordFrame(state);
   }
