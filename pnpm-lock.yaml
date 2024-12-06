@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      animaterm:
-        specifier: 'link:'
-        version: 'link:'
       blessed:
         specifier: ^0.1.81
         version: 0.1.81
@@ -30,6 +27,9 @@ importers:
       '@types/react':
         specifier: ^19.0.0
         version: 19.0.0
+      animaterm:
+        specifier: 'link:'
+        version: 'link:'
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.10.1)
