@@ -40,6 +40,7 @@ const config = {
       },
     },
     fps: 15,
+    lineNumber: true,
     quality: 10,
     /** 0 means repeat forever */
     repeat: 0,
@@ -99,8 +100,14 @@ function getTerminalLines(state) {
  * @param {{ terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
-  // TODO: include line numbers in the output
-  const lines = getTerminalLines(state);
+  const paddingLength = 5;
+  const lineNumber = (n) =>
+    config.animation.lineNumber
+      ? `${" ".repeat(paddingLength)}${n}`.substring(`${n}`.length)
+      : n.toString();
+  const lines = getTerminalLines(state).map(
+    (line, i) => `${lineNumber(i + 1)}:\$ ${line}`
+  );
   return lines.slice(-config.lineCount);
 }
 /**
@@ -256,7 +263,8 @@ const actionsRegistry = Object.freeze({
       .join(TOKEN_NL);
     state.clipboard = textToCopy;
   },
-  clear: async (_, state) => {
+  clear: async (step, state) => {
+    await actionsRegistry.type({ ...step, payload: "clear" }, state);
     state.pendingExecution = "";
     state.terminalContent = "";
     updateTerminal(state);
@@ -269,7 +277,9 @@ const actionsRegistry = Object.freeze({
  * @param {number} ms
  */
 function delay(state, ms) {
-  const frameCount = Math.floor(config.animation.fps * (ms / config.animation.timing.secondMs));
+  const frameCount = Math.floor(
+    config.animation.fps * (ms / config.animation.timing.secondMs)
+  );
   for (let i = 0; i < frameCount; i++) {
     recordFrame(state);
   }
