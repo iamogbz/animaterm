@@ -14,11 +14,12 @@
     "payload": {
       "startLine": 2,
       "startPos": 0,
-      "endLine": 2,
+      "endLine": 8,
       "endPos": 10
     }
   },
   { "action": "paste" },
+  { "action": "type", "payload": "\n" },
   { "action": "clear" },
   { "action": "type", "payload": "Goodbye!" }
 ]
