@@ -39,7 +39,12 @@ const config = {
         return `${config.dimensionsPx.text}px`;
       },
     },
-    cursor: "█",
+    cursor: {
+      /** Set to 0 to disable blinking */
+      blinkMs: 1000,
+      /** Set to empty string "" to disable cursor */
+      token: "█",
+    },
     fps: 15,
     lineNumber: true,
     quality: 10,
@@ -97,8 +102,17 @@ function getTerminalLines(state) {
 }
 
 /**
+ * Get the number of frames displayed for the milliseconds given
+ * @param {number} ms
+ */
+function msToFrameCount(ms) {
+  const framesPerMs = config.animation.fps / config.animation.timing.secondMs;
+  return Math.floor(ms * framesPerMs);
+}
+
+/**
  * Get visible lines from the terminal content as list
- * @param {{ terminalContent: string; }} state
+ * @param {{ frameCount: number; terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
   const paddingLength = 5;
@@ -109,38 +123,26 @@ function getVisibleTerminalLines(state) {
   const lines = getTerminalLines(state).map(
     (line, i) => `${lineNumber(i + 1)}:\$ ${line}`
   );
-  if (lines) {
-    lines[lines.length - 1] += config.animation.cursor;
+  const cursorVisibleFrames = msToFrameCount(config.animation.cursor.blinkMs);
+  const cursorVisible =
+    state.frameCount % Math.max(1, cursorVisibleFrames) <=
+    cursorVisibleFrames / 2;
+  if (lines && cursorVisible) {
+    lines[lines.length - 1] += config.animation.cursor.token;
   }
   return lines.slice(-config.lineCount);
-}
-/**
- * Get visible lines from the terminal content as single string blob
- * @param {{ terminalContent: string; }} state
- */
-function getVisibleTerminalContent(state) {
-  return getVisibleTerminalLines(state).join(TOKEN_NL);
-}
-
-/**
- * Update the terminal's display content
- * @param {{ terminalContent: any; clipboard?: string; }} state
- */
-function updateTerminal(state) {
-  terminalBox.setContent(getVisibleTerminalContent(state));
-  screen.render();
-  recordFrame(state);
 }
 
 /**
  * Record a frame of the terminal state
- * @param {{ terminalContent: string; }} state
+ * @param {{ frameCount: number; terminalContent: string; }} state
  */
 function recordFrame(state) {
   ctx.fillStyle = config.animation.css.backgroundColor;
   ctx.fillRect(0, 0, width, height);
   ctx.font = `${config.animation.css.fontSize} ${config.animation.css.fontStyle}`;
   ctx.fillStyle = config.animation.css.color;
+  state.frameCount += 1;
   getVisibleTerminalLines(state).forEach((line, index) => {
     ctx.fillText(
       line,
@@ -154,8 +156,39 @@ function recordFrame(state) {
 }
 
 /**
+ * Delay function
+ * @param {{ frameCount: number; terminalContent: string; }} state
+ * @param {number} ms
+ */
+function delay(state, ms) {
+  const frameCount = msToFrameCount(ms);
+  for (let i = 0; i < frameCount; i++) {
+    recordFrame(state);
+  }
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Get visible lines from the terminal content as single string blob
+ * @param {{ frameCount: number; terminalContent: string; }} state
+ */
+function getVisibleTerminalContent(state) {
+  return getVisibleTerminalLines(state).join(TOKEN_NL);
+}
+
+/**
+ * Update the terminal's display content
+ * @param {{ clipboard?: string; frameCount: number; terminalContent: any; }} state
+ */
+function updateTerminal(state) {
+  terminalBox.setContent(getVisibleTerminalContent(state));
+  screen.render();
+  recordFrame(state);
+}
+
+/**
  * Utility to terminate and save recording
- * @param {{ outputPath: string; terminalContent: string; }} state
+ * @param {{ frameCount: number; outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
   await delay(state, config.animation.timing.secondMs * 5);
@@ -169,7 +202,7 @@ async function finishRecording(state, exitCode = 0) {
 
 /**
  * Utility to throw an error and abort execution
- * @param {{ clipboard?: string | undefined; outputPath: string; pendingExecution: string; terminalContent: string; }} state
+ * @param {{ clipboard?: string | undefined; frameCount: number; outputPath: string; pendingExecution: string; terminalContent: string; }} state
  * @param {string} errorMessage
  */
 function abortExecution(state, errorMessage) {
@@ -187,7 +220,7 @@ function abortExecution(state, errorMessage) {
   @type {
     Record<string, (
       step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
-      state: { env: Record<string, string | undefined>; pendingExecution:string; terminalContent: string; clipboard: string; }
+      state: { env: Record<string, string | undefined>; frameCount: number; pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
 */
@@ -279,21 +312,6 @@ const actionsRegistry = Object.freeze({
 });
 
 /**
- * Delay function
- * @param {{ terminalContent: string; }} state
- * @param {number} ms
- */
-function delay(state, ms) {
-  const frameCount = Math.floor(
-    config.animation.fps * (ms / config.animation.timing.secondMs)
-  );
-  for (let i = 0; i < frameCount; i++) {
-    recordFrame(state);
-  }
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
  * Simulate steps with dynamic handling of actions
  * @param {object[]} steps
  * @param {string} outputPath
@@ -303,6 +321,7 @@ async function simulateSteps(steps, outputPath) {
   const state = {
     clipboard: "",
     env: { ...process.env },
+    frameCount: 0,
     outputPath,
     pendingExecution: "",
     terminalContent: "",
