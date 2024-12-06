@@ -18,7 +18,7 @@ animaterm script.json output.gif
 
 ![demo](./docs/usage.gif)
 
-> This demo gif was created using only animaterm
+> This demo gif was created using only `animaterm`
 
 ### Script
 

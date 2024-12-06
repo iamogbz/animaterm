@@ -39,6 +39,7 @@ const config = {
         return `${config.dimensionsPx.text}px`;
       },
     },
+    cursor: "█",
     fps: 15,
     lineNumber: true,
     quality: 10,
@@ -108,6 +109,9 @@ function getVisibleTerminalLines(state) {
   const lines = getTerminalLines(state).map(
     (line, i) => `${lineNumber(i + 1)}:\$ ${line}`
   );
+  if (lines) {
+    lines[lines.length - 1] += config.animation.cursor;
+  }
   return lines.slice(-config.lineCount);
 }
 /**
