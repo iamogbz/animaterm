@@ -1,6 +1,5 @@
 const blessed = require("blessed");
-const { createCanvas } = require("canvas");
-const GIFEncoder = require("gifencoder");
+const { Svg, G } = require("@svgdotjs/svg.js");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
@@ -83,15 +82,34 @@ const terminalBox = blessed.box({
 
 screen.append(terminalBox);
 
-// Canvas and GIF setup
-const { height, width } = config.dimensionsPx;
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext("2d");
-const encoder = new GIFEncoder(width, height);
-encoder.start();
-encoder.setRepeat(config.animation.repeat);
-encoder.setDelay(config.animation.delay);
-encoder.setQuality(config.animation.quality);
+/** @type {Svg | null} */
+let svg = null;
+/** @type {G | null} */
+let currentFrame = null;
+
+/**
+ * Setup SVG for recording
+ */
+async function setupSVG() {
+  const { createSVGWindow } = await import("svgdom");
+  const { SVG, registerWindow } = await import("@svgdotjs/svg.js");
+
+  // Canvas and GIF setup
+  const { height, width } = config.dimensionsPx;
+  const window = createSVGWindow();
+  const document = window.document;
+  registerWindow(window, document);
+
+  const svgDom = SVG(document.documentElement);
+  svgDom.attr({
+    width,
+    height,
+    "xmlns:xlink": "http://www.w3.org/1999/xlink", // Add the xmlns:xlink attribute
+    preserveAspectRatio: "xMidYMid meet", // Ensure SVG scales correctly
+  });
+
+  return svgDom;
+}
 
 /**
  * Get all lines that have been displayed in the terminal as list
@@ -138,21 +156,31 @@ function getVisibleTerminalLines(state) {
  * @param {{ frameCount: number; terminalContent: string; }} state
  */
 function recordFrame(state) {
-  ctx.fillStyle = config.animation.css.backgroundColor;
-  ctx.fillRect(0, 0, width, height);
-  ctx.font = `${config.animation.css.fontSize} ${config.animation.css.fontStyle}`;
-  ctx.fillStyle = config.animation.css.color;
-  state.frameCount += 1;
-  getVisibleTerminalLines(state).forEach((line, index) => {
-    ctx.fillText(
-      line,
-      config.dimensionsPx.padding.x,
-      config.dimensionsPx.padding.y + index * config.dimensionsPx.lineHeight
-    );
-  });
+  if (!svg) return;
 
-  // @ts-ignore - Ignore type checking for {CanvasRenderingContext2D}, as it's valid JS
-  encoder.addFrame(ctx);
+  if (currentFrame) currentFrame.remove();
+
+  currentFrame = svg.group();
+
+  const { height, width } = config.dimensionsPx;
+  currentFrame.rect(width, height).fill(config.animation.css.backgroundColor);
+  state.frameCount += 1;
+
+  getVisibleTerminalLines(state).forEach((line, index) => {
+    currentFrame
+      ?.text((span) => {
+        span.text(line);
+        span.x(config.dimensionsPx.padding.x);
+        span.y(
+          config.dimensionsPx.padding.y + index * config.dimensionsPx.lineHeight
+        );
+      })
+      .font({
+        family: config.animation.css.fontStyle,
+        size: config.animation.css.fontSize,
+        fill: config.animation.css.color,
+      });
+  });
 }
 
 /**
@@ -191,12 +219,34 @@ function updateTerminal(state) {
  * @param {{ frameCount: number; outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
+  if (!svg) throw new Error("SVG not initialized");
+
   await delay(state, config.animation.timing.secondMs * 5);
   const { outputPath } = state;
-  encoder.finish();
+
+  let animationElements = [];
+  svg.children().forEach((child, index) => {
+    if (index > 0) {
+      // skip the background rect
+      child.opacity(0);
+      let animation = child
+        .animate(
+          config.animation.delay,
+          index * config.animation.delay,
+          "absolute"
+        )
+        .attr({ opacity: 1 });
+      animation.after(() => {
+        child.opacity(0);
+      });
+      animationElements.push(animation);
+    }
+  });
+
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, encoder.out.getData());
-  console.log(`Recording saved as '${outputPath}'`);
+  fs.writeFileSync(outputPath, svg.svg());
+
+  console.log("Recording saved as", outputPath);
   process.exit(exitCode);
 }
 
@@ -317,6 +367,8 @@ const actionsRegistry = Object.freeze({
  * @param {string} outputPath
  */
 async function simulateSteps(steps, outputPath) {
+  svg = await setupSVG();
+
   // Run core simulation
   const state = {
     clipboard: "",
@@ -347,4 +399,4 @@ async function simulateSteps(steps, outputPath) {
   await finish();
 }
 
-module.exports = { encoder, screen, simulateSteps };
+module.exports = { screen, svg, simulateSteps };

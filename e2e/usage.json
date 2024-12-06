@@ -1,27 +1,58 @@
 [
-  { "action": "type", "payload": "# INSTALL ANIMATERM FROM GITHUB\n\n" },
-  { "action": "type", "payload": "npm i -g 'github:iamogbz/animaterm'" },
-  { "action": "enter" },
-  { "action": "type", "payload": "# CREATE SAMPLE REQUIRED SCRIPT FILE\n\n" },
+  {
+    "action": "type",
+    "payload": "# INSTALL ANIMATERM FROM GITHUB\n\n"
+  },
+  {
+    "action": "type",
+    "payload": "npm i -g 'github:iamogbz/animaterm'"
+  },
+  {
+    "action": "enter"
+  },
+  {
+    "action": "type",
+    "payload": "# CREATE SAMPLE REQUIRED SCRIPT FILE\n\n"
+  },
   {
     "action": "type",
     "payload": "echo '[\n  {\"action\": \"type\", \"payload\": \"seq 1 100\"},\n  {\"action\": \"enter\"}\n]' > demo.json"
   },
-  { "action": "enter" },
-  { "action": "type", "payload": "\n# USAGE EXAMPLE BEGINS BELOW\n\n" },
+  {
+    "action": "enter"
+  },
   {
     "action": "type",
-    "payload": "animaterm demo.json recordings/demo.gif > /dev/null 2>&1"
+    "payload": "\n# USAGE EXAMPLE BEGINS BELOW\n\n"
   },
-  { "action": "enter" },
+  {
+    "action": "type",
+    "payload": "animaterm demo.json recordings/demo.svg > /dev/null 2>&1"
+  },
+  {
+    "action": "enter"
+  },
   {
     "action": "waitForOutput",
     "payload": "animaterm demo.json",
     "timeoutMs": 10000
   },
-  { "action": "type", "payload": "ls -al" },
-  { "action": "enter" },
-  { "action": "type", "payload": "ls recordings/" },
-  { "action": "enter" },
-  { "action": "type", "payload": "This demo gif was created using only animaterm\n" }
+  {
+    "action": "type",
+    "payload": "ls -al"
+  },
+  {
+    "action": "enter"
+  },
+  {
+    "action": "type",
+    "payload": "ls recordings/"
+  },
+  {
+    "action": "enter"
+  },
+  {
+    "action": "type",
+    "payload": "This demo animation was created using only animaterm\n"
+  }
 ]

@@ -12,7 +12,7 @@ jobs:
     name: Demo current build
     runs-on: ubuntu-latest
     env:
-      OUTPUT_PATH: ./recordings/output.gif
+      OUTPUT_PATH: ./recordings/output.svg
 
     steps:
       # Step 1: Checkout the repository
