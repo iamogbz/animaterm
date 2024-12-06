@@ -147,9 +147,7 @@ function recordFrame(state) {
  * @param {{ outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
-  // FIX: delay last frame for easy grok
-  await delay(config.animation.timing.secondMs * 5);
-  recordFrame(state);
+  await delay(state, config.animation.timing.secondMs * 5);
   const { outputPath } = state;
   encoder.finish();
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -190,7 +188,7 @@ const actionsRegistry = Object.freeze({
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      await delay((1 + Math.random()) * config.animation.typing.speedMs);
+      await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
     }
   },
   enter: async (_, state) => {
@@ -217,9 +215,7 @@ const actionsRegistry = Object.freeze({
         child.on("exit", async () => {
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
-          // FIX: wait for a while between executed commands
-          await delay(config.animation.timing.secondMs);
-          updateTerminal(state);
+          await delay(state, config.animation.timing.secondMs);
           resolve();
         });
 
@@ -235,17 +231,14 @@ const actionsRegistry = Object.freeze({
       if (Date.now() - startTime > timeoutMs) {
         throw Error(`Timeout waiting for output: "${payload}"`);
       }
-      await delay(config.animation.timing.secondMs);
-      updateTerminal(state);
+      await delay(state, config.animation.timing.secondMs);
     }
   },
   paste: async (_, state) => {
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    // FIX: wait for a while after pasting
-    await delay(config.animation.timing.secondMs);
-    updateTerminal(state);
+    await delay(state, config.animation.timing.secondMs);
   },
   copy: async (step, state) => {
     if (typeof step.payload !== "object")
@@ -269,8 +262,16 @@ const actionsRegistry = Object.freeze({
   },
 });
 
-// Delay function
-function delay(/** @type {number} */ ms) {
+/**
+ * Delay function
+ * @param {{ terminalContent: string; }} state
+ * @param {number} ms
+ */
+function delay(state, ms) {
+  const frameCount = config.animation.fps * (ms / config.animation.timing.secondMs);
+  for (let i = 0; i < frameCount; i++) {
+    recordFrame(state);
+  }
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
