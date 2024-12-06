@@ -7,7 +7,7 @@
 Install from the github repo
 
 ```sh
-npm i -g 'github:iamogbz/animaterm#main'
+npm i -g 'github:iamogbz/animaterm'
 ```
 
 Run the `animaterm` bin with cli options
