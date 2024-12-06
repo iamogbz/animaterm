@@ -183,7 +183,7 @@ function abortExecution(state, errorMessage) {
   @type {
     Record<string, (
       step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
-      state: { pendingExecution:string; terminalContent: string; clipboard: string; }
+      state: { env: Record<string, string | undefined>; pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
 */
@@ -224,12 +224,15 @@ const actionsRegistry = Object.freeze({
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
           await delay(state, config.animation.timing.secondMs);
+          // TODO: preserve env variables. Object.assign(state.env, child.env);
           resolve();
         });
 
         child.on("error", (error) => {
           reject(error);
         });
+      } else {
+        resolve();
       }
     });
   },
@@ -295,6 +298,7 @@ async function simulateSteps(steps, outputPath) {
   // Run core simulation
   const state = {
     clipboard: "",
+    env: { ...process.env },
     outputPath,
     pendingExecution: "",
     terminalContent: "",
