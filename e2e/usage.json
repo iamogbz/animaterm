@@ -1,4 +1,7 @@
 [
+  { "action": "type", "payload": "# INSTALL ANIMATERM FROM GITHUB\n\n" },
+  { "action": "type", "payload": "npm i -g 'github:iamogbz/animaterm'" },
+  { "action": "enter" },
   { "action": "type", "payload": "# CREATE SAMPLE REQUIRED SCRIPT FILE\n\n" },
   {
     "action": "type",
@@ -17,5 +20,8 @@
     "timeoutMs": 10000
   },
   { "action": "type", "payload": "ls -al" },
-  { "action": "enter" }
+  { "action": "enter" },
+  { "action": "type", "payload": "ls recordings/" },
+  { "action": "enter" },
+  { "action": "type", "payload": "This demo gif was created using only animaterm\n" }
 ]

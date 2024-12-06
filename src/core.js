@@ -40,6 +40,7 @@ const config = {
       },
     },
     fps: 15,
+    lineNumber: true,
     quality: 10,
     /** 0 means repeat forever */
     repeat: 0,
@@ -47,7 +48,7 @@ const config = {
       secondMs: 1000,
     },
     typing: {
-      speedMs: 100,
+      speedMs: 20,
     },
     get delay() {
       return this.timing.secondMs / this.fps;
@@ -99,8 +100,14 @@ function getTerminalLines(state) {
  * @param {{ terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
-  // TODO: include line numbers in the output
-  const lines = getTerminalLines(state);
+  const paddingLength = 5;
+  const lineNumber = (n) =>
+    config.animation.lineNumber
+      ? `${" ".repeat(paddingLength)}${n}`.substring(`${n}`.length)
+      : n.toString();
+  const lines = getTerminalLines(state).map(
+    (line, i) => `${lineNumber(i + 1)}:\$ ${line}`
+  );
   return lines.slice(-config.lineCount);
 }
 /**
@@ -147,9 +154,7 @@ function recordFrame(state) {
  * @param {{ outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
-  // FIX: delay last frame for easy grok
-  await delay(config.animation.timing.secondMs * 5);
-  recordFrame(state);
+  await delay(state, config.animation.timing.secondMs * 5);
   const { outputPath } = state;
   encoder.finish();
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -178,7 +183,7 @@ function abortExecution(state, errorMessage) {
   @type {
     Record<string, (
       step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
-      state: { pendingExecution:string; terminalContent: string; clipboard: string; }
+      state: { env: Record<string, string | undefined>; pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
 */
@@ -190,7 +195,7 @@ const actionsRegistry = Object.freeze({
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      await delay((1 + Math.random()) * config.animation.typing.speedMs);
+      await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
     }
   },
   enter: async (_, state) => {
@@ -199,6 +204,7 @@ const actionsRegistry = Object.freeze({
     state.pendingExecution = "";
     state.terminalContent += TOKEN_NL;
     updateTerminal(state);
+    await delay(state, config.animation.timing.secondMs);
     return new Promise((resolve, reject) => {
       if (toExecute) {
         // TODO: preserve env variables e.g. PATH, updated between child processes
@@ -217,15 +223,16 @@ const actionsRegistry = Object.freeze({
         child.on("exit", async () => {
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
-          // FIX: wait for a while between executed commands
-          await delay(config.animation.timing.secondMs);
-          updateTerminal(state);
+          await delay(state, config.animation.timing.secondMs);
+          // TODO: preserve env variables. Object.assign(state.env, child.env);
           resolve();
         });
 
         child.on("error", (error) => {
           reject(error);
         });
+      } else {
+        resolve();
       }
     });
   },
@@ -235,17 +242,14 @@ const actionsRegistry = Object.freeze({
       if (Date.now() - startTime > timeoutMs) {
         throw Error(`Timeout waiting for output: "${payload}"`);
       }
-      await delay(config.animation.timing.secondMs);
-      updateTerminal(state);
+      await delay(state, config.animation.timing.secondMs);
     }
   },
   paste: async (_, state) => {
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    // FIX: wait for a while after pasting
-    await delay(config.animation.timing.secondMs);
-    updateTerminal(state);
+    await delay(state, config.animation.timing.secondMs);
   },
   copy: async (step, state) => {
     if (typeof step.payload !== "object")
@@ -262,15 +266,26 @@ const actionsRegistry = Object.freeze({
       .join(TOKEN_NL);
     state.clipboard = textToCopy;
   },
-  clear: async (_, state) => {
+  clear: async (step, state) => {
+    await actionsRegistry.type({ ...step, payload: "clear" }, state);
     state.pendingExecution = "";
     state.terminalContent = "";
     updateTerminal(state);
   },
 });
 
-// Delay function
-function delay(/** @type {number} */ ms) {
+/**
+ * Delay function
+ * @param {{ terminalContent: string; }} state
+ * @param {number} ms
+ */
+function delay(state, ms) {
+  const frameCount = Math.floor(
+    config.animation.fps * (ms / config.animation.timing.secondMs)
+  );
+  for (let i = 0; i < frameCount; i++) {
+    recordFrame(state);
+  }
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -283,6 +298,7 @@ async function simulateSteps(steps, outputPath) {
   // Run core simulation
   const state = {
     clipboard: "",
+    env: { ...process.env },
     outputPath,
     pendingExecution: "",
     terminalContent: "",
