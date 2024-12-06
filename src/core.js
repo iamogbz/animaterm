@@ -47,7 +47,7 @@ const config = {
       secondMs: 1000,
     },
     typing: {
-      speedMs: 10,
+      speedMs: 20,
     },
     get delay() {
       return this.timing.secondMs / this.fps;
@@ -197,6 +197,7 @@ const actionsRegistry = Object.freeze({
     state.pendingExecution = "";
     state.terminalContent += TOKEN_NL;
     updateTerminal(state);
+    await delay(state, config.animation.timing.secondMs);
     return new Promise((resolve, reject) => {
       if (toExecute) {
         // TODO: preserve env variables e.g. PATH, updated between child processes
