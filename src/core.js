@@ -47,7 +47,7 @@ const config = {
       secondMs: 1000,
     },
     typing: {
-      speedMs: 100,
+      speedMs: 15,
     },
     get delay() {
       return this.timing.secondMs / this.fps;
