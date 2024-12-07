@@ -19,10 +19,8 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@svgdotjs/svg.js": "^3.2.4",
     "blessed": "^0.1.81",
-    "form-data": "^4.0.1",
-    "svgdom": "^0.1.19"
+    "form-data": "^4.0.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
