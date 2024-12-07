@@ -132,7 +132,6 @@ function createSvgAnimation(frames, outputPath) {
         font-family: ${config.animation.css.fontStyle};
         font-size: ${config.animation.css.fontSize};
         text-anchor: start;
-        white-space: normal;
     }
     </style>
     <rect width="${width}" height="${height}" fill="${
