@@ -81,6 +81,7 @@ screen.append(terminalBox);
 
 /**
  * Round a number to a specified number of decimal places.
+ *
  * @param {number} n - The number to round.
  * @param {number} dp - The number of decimal places to round to.
  */
@@ -89,7 +90,25 @@ function toDecimalPlaces(n, dp) {
 }
 
 /**
+ * Escape special XML characters for safe embedding in SVG content.
+ *
+ * @param {string} unsafe - The input text to be escaped
+ */
+function escapeXml(unsafe) {
+  const escapeMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&apos;",
+  };
+
+  return unsafe.replace(/[&<>"']/g, (char) => escapeMap[char]);
+}
+
+/**
  * Creates an SVG animation with multiple frames of text.
+ *
  * @param {string[][]} frames - An array of text lines frames to animate.
  * @param {string} outputPath - The path to save the SVG file.
  */
@@ -128,7 +147,7 @@ function createSvgAnimation(frames, outputPath) {
           .map((line, lineIdx) => {
             return `<tspan x="${padding.x}" dy="${
               Math.min(1, lineIdx) * lineHeight
-            }">${line}</tspan>`;
+            }">${escapeXml(line)}</tspan>`;
           })
           .join(TOKEN_NL);
 
@@ -158,6 +177,7 @@ function createSvgAnimation(frames, outputPath) {
 
 /**
  * Get all lines that have been displayed in the terminal as list
+ *
  * @param {{ terminalContent: string; }} state
  */
 function getTerminalLines(state) {
@@ -166,6 +186,7 @@ function getTerminalLines(state) {
 
 /**
  * Get the number of frames displayed for the milliseconds given
+ *
  * @param {number} ms
  */
 function msToFrameCount(ms) {
@@ -174,6 +195,7 @@ function msToFrameCount(ms) {
 
 /**
  * Get visible lines from the terminal content as list
+ *
  * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
@@ -197,6 +219,7 @@ function getVisibleTerminalLines(state) {
 
 /**
  * Record a frame of the terminal state
+ *
  * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function recordFrame(state) {
@@ -205,6 +228,7 @@ function recordFrame(state) {
 
 /**
  * Delay function
+ *
  * @param {{ frames: string[][]; terminalContent: string; }} state
  * @param {number} ms
  */
@@ -218,6 +242,7 @@ function delay(state, ms) {
 
 /**
  * Get visible lines from the terminal content as single string blob
+ *
  * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function getVisibleTerminalContent(state) {
@@ -226,6 +251,7 @@ function getVisibleTerminalContent(state) {
 
 /**
  * Update the terminal's display content
+ *
  * @param {{ clipboard?: string; frames: string[][]; terminalContent: any; }} state
  */
 function updateTerminal(state) {
@@ -236,6 +262,7 @@ function updateTerminal(state) {
 
 /**
  * Utility to terminate and save recording
+ *
  * @param {{ frames: string[][]; outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
@@ -250,6 +277,7 @@ async function finishRecording(state, exitCode = 0) {
 
 /**
  * Utility to throw an error and abort execution
+ *
  * @param {{ clipboard?: string | undefined; frames: string[][]; outputPath: string; pendingExecution: string; terminalContent: string; }} state
  * @param {string} errorMessage
  */
@@ -263,8 +291,8 @@ function abortExecution(state, errorMessage) {
   return finishRecording(state, 1);
 }
 
-// Registry of actions with their implementation
 /**
+  Registry of actions with their implementation
   @type {
     Record<string, (
       step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
@@ -283,8 +311,8 @@ const actionsRegistry = Object.freeze({
       await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
     }
   },
+  /** execute the last set of instructions typed */
   enter: async (_, state) => {
-    // execute the last set of instructions typed
     const toExecute = state.pendingExecution.trim();
     state.pendingExecution = "";
     state.terminalContent += TOKEN_NL;
@@ -361,6 +389,7 @@ const actionsRegistry = Object.freeze({
 
 /**
  * Simulate steps with dynamic handling of actions
+ *
  * @param {object[]} steps
  * @param {string} outputPath
  */
