@@ -14,15 +14,13 @@
   "scripts": {
     "build-comment": "node --env-file=.env 'scripts/comment.js'",
     "build-verify": "node  --env-file=.env src/index.js 'e2e/script1.json'",
-    "build-demo": "animaterm 'e2e/usage.json' 'docs/usage.gif'",
+    "build-demo": "animaterm 'e2e/usage.json' 'docs/usage.svg'",
     "test": "jest --detectOpenHandles",
     "type-check": "tsc"
   },
   "dependencies": {
     "blessed": "^0.1.81",
-    "canvas": "^2.11.2",
-    "form-data": "^4.0.1",
-    "gifencoder": "^2.0.1"
+    "form-data": "^4.0.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

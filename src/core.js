@@ -1,12 +1,11 @@
 const blessed = require("blessed");
-const { createCanvas } = require("canvas");
-const GIFEncoder = require("gifencoder");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
 
 // constants
 const TOKEN_NL = "\n";
+const SEC_TO_MS = 1000;
 
 // TODO: export config
 const config = {
@@ -50,14 +49,11 @@ const config = {
     quality: 10,
     /** 0 means repeat forever */
     repeat: 0,
-    timing: {
-      secondMs: 1000,
-    },
     typing: {
       speedMs: 20,
     },
-    get delay() {
-      return this.timing.secondMs / this.fps;
+    get msPerFrame() {
+      return SEC_TO_MS / this.fps;
     },
   },
 };
@@ -83,18 +79,105 @@ const terminalBox = blessed.box({
 
 screen.append(terminalBox);
 
-// Canvas and GIF setup
-const { height, width } = config.dimensionsPx;
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext("2d");
-const encoder = new GIFEncoder(width, height);
-encoder.start();
-encoder.setRepeat(config.animation.repeat);
-encoder.setDelay(config.animation.delay);
-encoder.setQuality(config.animation.quality);
+/**
+ * Round a number to a specified number of decimal places.
+ *
+ * @param {number} n - The number to round.
+ * @param {number} dp - The number of decimal places to round to.
+ */
+function toDecimalPlaces(n, dp) {
+  return Math.round((n + Number.EPSILON) * Math.pow(10, dp)) / Math.pow(10, dp);
+}
+
+/**
+ * Escape special XML characters for safe embedding in SVG content.
+ *
+ * @param {string} unsafe - The input text to be escaped
+ */
+function escapeXml(unsafe) {
+  const escapeMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&apos;",
+  };
+
+  return unsafe.replace(/[&<>"']/g, (char) => escapeMap[char]);
+}
+
+/**
+ * Creates an SVG animation with multiple frames of text.
+ *
+ * @param {string[][]} frames - An array of text lines frames to animate.
+ * @param {string} outputPath - The path to save the SVG file.
+ */
+function createSvgAnimation(frames, outputPath) {
+  const secondsPerFrame = toDecimalPlaces(
+    config.animation.msPerFrame / SEC_TO_MS,
+    2
+  );
+  const { height, lineHeight, padding, width } = config.dimensionsPx;
+  const frameIdxToId = (/** @type {number} */ i) => {
+    const animFrame = `frame${i + 1}`;
+    return {
+      enter: `${animFrame}enter`,
+      leave: `${animFrame}leave`,
+    };
+  };
+
+  // Generate SVG content
+  const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
+    <style>
+    .frame {
+        font-family: ${config.animation.css.fontStyle};
+        font-size: ${config.animation.css.fontSize};
+        text-anchor: start;
+        fill: ${config.animation.css.color};
+    }
+    </style>
+    <rect width="${width}" height="${height}" fill="${
+    config.animation.css.backgroundColor
+  }" />
+    ${frames
+      .map((lines, frameIdx) => {
+        const startSecs = frameIdx * secondsPerFrame;
+        const text = lines
+          .map((line, lineIdx) => {
+            return `<tspan x="${padding.x}" dy="${
+              Math.min(1, lineIdx) * lineHeight
+            }">${escapeXml(line)}</tspan>`;
+          })
+          .join(TOKEN_NL);
+
+        const instantAnimDur = "0.000001s";
+        const frameIds = frameIdxToId(frameIdx);
+        const previousFrameIds = frameIdxToId(frameIdx - 1);
+        const enterAnimBegin = frameIdx
+          ? `${previousFrameIds.leave}.end`
+          : `${startSecs}s; ${frameIdxToId(frames.length - 1).leave}.end`;
+
+        return `
+        <text x="${padding.x}" y="${padding.y}" class="frame" opacity="0">
+        ${text}
+        <animate id="${frameIds.enter}" attributeName="opacity" from="0" to="1" begin="${enterAnimBegin}" dur="${instantAnimDur}" fill="freeze" />
+        <animate id="${frameIds.leave}" attributeName="opacity" from="1" to="0" begin="${frameIds.enter}.end+${secondsPerFrame}s" dur="${instantAnimDur}" fill="freeze" />
+        </text>`;
+      })
+      .join("\n")}
+</svg>
+    `;
+
+  // Write SVG content to file
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, svgContent, "utf8");
+  console.log(`SVG animation created at ${outputPath}`);
+}
 
 /**
  * Get all lines that have been displayed in the terminal as list
+ *
  * @param {{ terminalContent: string; }} state
  */
 function getTerminalLines(state) {
@@ -103,16 +186,17 @@ function getTerminalLines(state) {
 
 /**
  * Get the number of frames displayed for the milliseconds given
+ *
  * @param {number} ms
  */
 function msToFrameCount(ms) {
-  const framesPerMs = config.animation.fps / config.animation.timing.secondMs;
-  return Math.floor(ms * framesPerMs);
+  return Math.floor(ms / config.animation.msPerFrame);
 }
 
 /**
  * Get visible lines from the terminal content as list
- * @param {{ frameCount: number; terminalContent: string; }} state
+ *
+ * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function getVisibleTerminalLines(state) {
   const paddingLength = 5;
@@ -124,9 +208,9 @@ function getVisibleTerminalLines(state) {
     (line, i) => `${lineNumber(i + 1)}:\$ ${line}`
   );
   const cursorVisibleFrames = msToFrameCount(config.animation.cursor.blinkMs);
+  const frameCount = state.frames.length;
   const cursorVisible =
-    state.frameCount % Math.max(1, cursorVisibleFrames) <=
-    cursorVisibleFrames / 2;
+    frameCount % Math.max(1, cursorVisibleFrames) <= cursorVisibleFrames / 2;
   if (lines && cursorVisible) {
     lines[lines.length - 1] += config.animation.cursor.token;
   }
@@ -135,29 +219,17 @@ function getVisibleTerminalLines(state) {
 
 /**
  * Record a frame of the terminal state
- * @param {{ frameCount: number; terminalContent: string; }} state
+ *
+ * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function recordFrame(state) {
-  ctx.fillStyle = config.animation.css.backgroundColor;
-  ctx.fillRect(0, 0, width, height);
-  ctx.font = `${config.animation.css.fontSize} ${config.animation.css.fontStyle}`;
-  ctx.fillStyle = config.animation.css.color;
-  state.frameCount += 1;
-  getVisibleTerminalLines(state).forEach((line, index) => {
-    ctx.fillText(
-      line,
-      config.dimensionsPx.padding.x,
-      config.dimensionsPx.padding.y + index * config.dimensionsPx.lineHeight
-    );
-  });
-
-  // @ts-ignore - Ignore type checking for {CanvasRenderingContext2D}, as it's valid JS
-  encoder.addFrame(ctx);
+  state.frames.push(getVisibleTerminalLines(state));
 }
 
 /**
  * Delay function
- * @param {{ frameCount: number; terminalContent: string; }} state
+ *
+ * @param {{ frames: string[][]; terminalContent: string; }} state
  * @param {number} ms
  */
 function delay(state, ms) {
@@ -170,7 +242,8 @@ function delay(state, ms) {
 
 /**
  * Get visible lines from the terminal content as single string blob
- * @param {{ frameCount: number; terminalContent: string; }} state
+ *
+ * @param {{ frames: string[][]; terminalContent: string; }} state
  */
 function getVisibleTerminalContent(state) {
   return getVisibleTerminalLines(state).join(TOKEN_NL);
@@ -178,7 +251,8 @@ function getVisibleTerminalContent(state) {
 
 /**
  * Update the terminal's display content
- * @param {{ clipboard?: string; frameCount: number; terminalContent: any; }} state
+ *
+ * @param {{ clipboard?: string; frames: string[][]; terminalContent: any; }} state
  */
 function updateTerminal(state) {
   terminalBox.setContent(getVisibleTerminalContent(state));
@@ -188,21 +262,23 @@ function updateTerminal(state) {
 
 /**
  * Utility to terminate and save recording
- * @param {{ frameCount: number; outputPath: string; terminalContent: string; }} state
+ *
+ * @param {{ frames: string[][]; outputPath: string; terminalContent: string; }} state
  */
 async function finishRecording(state, exitCode = 0) {
-  await delay(state, config.animation.timing.secondMs * 5);
-  const { outputPath } = state;
-  encoder.finish();
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, encoder.out.getData());
-  console.log(`Recording saved as '${outputPath}'`);
+  await delay(state, SEC_TO_MS * 5);
+  const { frames, outputPath } = state;
+
+  createSvgAnimation(frames, outputPath);
+
+  console.log("Recording saved as", outputPath);
   process.exit(exitCode);
 }
 
 /**
  * Utility to throw an error and abort execution
- * @param {{ clipboard?: string | undefined; frameCount: number; outputPath: string; pendingExecution: string; terminalContent: string; }} state
+ *
+ * @param {{ clipboard?: string | undefined; frames: string[][]; outputPath: string; pendingExecution: string; terminalContent: string; }} state
  * @param {string} errorMessage
  */
 function abortExecution(state, errorMessage) {
@@ -215,12 +291,12 @@ function abortExecution(state, errorMessage) {
   return finishRecording(state, 1);
 }
 
-// Registry of actions with their implementation
 /**
+  Registry of actions with their implementation
   @type {
     Record<string, (
       step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
-      state: { env: Record<string, string | undefined>; frameCount: number; pendingExecution:string; terminalContent: string; clipboard: string; }
+      state: { env: Record<string, string | undefined>; frames: string[][]; pendingExecution:string; terminalContent: string; clipboard: string; }
     ) => Promise<void>>
   }
 */
@@ -235,13 +311,13 @@ const actionsRegistry = Object.freeze({
       await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
     }
   },
+  /** execute the last set of instructions typed */
   enter: async (_, state) => {
-    // execute the last set of instructions typed
     const toExecute = state.pendingExecution.trim();
     state.pendingExecution = "";
     state.terminalContent += TOKEN_NL;
     updateTerminal(state);
-    await delay(state, config.animation.timing.secondMs);
+    await delay(state, SEC_TO_MS);
     return new Promise((resolve, reject) => {
       if (toExecute) {
         // TODO: preserve env variables e.g. PATH, updated between child processes
@@ -260,7 +336,7 @@ const actionsRegistry = Object.freeze({
         child.on("exit", async () => {
           state.terminalContent += TOKEN_NL; // Add newline after command execution
           updateTerminal(state);
-          await delay(state, config.animation.timing.secondMs);
+          await delay(state, SEC_TO_MS);
           // TODO: preserve env variables. Object.assign(state.env, child.env);
           resolve();
         });
@@ -279,14 +355,14 @@ const actionsRegistry = Object.freeze({
       if (Date.now() - startTime > timeoutMs) {
         throw Error(`Timeout waiting for output: "${payload}"`);
       }
-      await delay(state, config.animation.timing.secondMs);
+      await delay(state, SEC_TO_MS);
     }
   },
   paste: async (_, state) => {
     state.pendingExecution += state.clipboard;
     state.terminalContent += state.clipboard;
     updateTerminal(state);
-    await delay(state, config.animation.timing.secondMs);
+    await delay(state, SEC_TO_MS);
   },
   copy: async (step, state) => {
     if (typeof step.payload !== "object")
@@ -313,6 +389,7 @@ const actionsRegistry = Object.freeze({
 
 /**
  * Simulate steps with dynamic handling of actions
+ *
  * @param {object[]} steps
  * @param {string} outputPath
  */
@@ -321,7 +398,7 @@ async function simulateSteps(steps, outputPath) {
   const state = {
     clipboard: "",
     env: { ...process.env },
-    frameCount: 0,
+    frames: [],
     outputPath,
     pendingExecution: "",
     terminalContent: "",
@@ -347,4 +424,4 @@ async function simulateSteps(steps, outputPath) {
   await finish();
 }
 
-module.exports = { encoder, screen, simulateSteps };
+module.exports = { screen, simulateSteps };

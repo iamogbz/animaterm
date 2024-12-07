@@ -1,6 +1,6 @@
 # Animaterm
 
-📟 Create animated terminal gifs from script
+📟 Automatically create terminal animations from script
 
 ## Usage
 
@@ -13,12 +13,12 @@ npm i -g 'github:iamogbz/animaterm'
 Run the `animaterm` bin with cli options
 
 ```sh
-animaterm script.json output.gif
+animaterm script.json output.svg
 ```
 
-![demo](./docs/usage.gif)
+![demo](./docs/usage.svg)
 
-> This demo gif was created using only `animaterm`
+> This demo animation was created using only `animaterm`
 
 ### Script
 
