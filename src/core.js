@@ -90,16 +90,17 @@ function toDecimalPlaces(n, dp) {
   return Math.round((n + Number.EPSILON) * Math.pow(10, dp)) / Math.pow(10, dp);
 }
 
+const dom = new JSDOM("");
+const escapeElem = dom.window.document.createElement("textarea");
+
 /**
  * Escape special XML characters for safe embedding in SVG content.
  *
  * @param {string} unsafe - The input text to be escaped
  */
 function escapeXml(unsafe) {
-  const dom = new JSDOM("");
-  const escape = dom.window.document.createElement("textarea");
-  escape.textContent = unsafe;
-  return escape.innerHTML;
+  escapeElem.textContent = unsafe;
+  return escapeElem.innerHTML;
 }
 
 /**
@@ -127,10 +128,11 @@ function createSvgAnimation(frames, outputPath) {
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
     <style>
     .frame {
+        fill: ${config.animation.css.color};
         font-family: ${config.animation.css.fontStyle};
         font-size: ${config.animation.css.fontSize};
         text-anchor: start;
-        fill: ${config.animation.css.color};
+        white-space: normal;
     }
     </style>
     <rect width="${width}" height="${height}" fill="${
@@ -141,9 +143,10 @@ function createSvgAnimation(frames, outputPath) {
         const startSecs = frameIdx * secondsPerFrame;
         const text = lines
           .map((line, lineIdx) => {
-            return `<tspan x="${padding.x}" dy="${
-              Math.min(1, lineIdx) * lineHeight
-            }">${escapeXml(line)}</tspan>`;
+            const dx = padding.x;
+            const dy = Math.min(1, lineIdx) * lineHeight;
+            const sanitizedLine = escapeXml(line);
+            return `<tspan x="${dx}" dy="${dy}" xml:space="preserve">${sanitizedLine}</tspan>`;
           })
           .join(`${TOKEN_NL}${" ".repeat(12)}`);
 
@@ -155,7 +158,7 @@ function createSvgAnimation(frames, outputPath) {
           : `${startSecs}s; ${frameIdxToId(frames.length - 1).leave}.end`;
 
         return `
-        <text x="${padding.x}" y="${padding.y}" class="frame" opacity="0">
+        <text x="${padding.x}" y="${padding.y}" class="frame" opacity="0" xml:space="preserve">
             ${text}
             <animate id="${frameIds.enter}" attributeName="opacity" from="0" to="1" begin="${enterAnimBegin}" dur="${instantAnimDur}" fill="freeze" />
             <animate id="${frameIds.leave}" attributeName="opacity" from="1" to="0" begin="${frameIds.enter}.end+${secondsPerFrame}s" dur="${instantAnimDur}" fill="freeze" />
