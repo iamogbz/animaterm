@@ -2,6 +2,7 @@ const blessed = require("blessed");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
+const { JSDOM } = require("jsdom");
 
 // constants
 const TOKEN_NL = "\n";
@@ -95,15 +96,10 @@ function toDecimalPlaces(n, dp) {
  * @param {string} unsafe - The input text to be escaped
  */
 function escapeXml(unsafe) {
-  const escapeMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&apos;",
-  };
-
-  return unsafe.replace(/[&<>"']/g, (char) => escapeMap[char]);
+  const dom = new JSDOM("");
+  const escape = dom.window.document.createElement("textarea");
+  escape.textContent = unsafe;
+  return escape.innerHTML;
 }
 
 /**
@@ -149,7 +145,7 @@ function createSvgAnimation(frames, outputPath) {
               Math.min(1, lineIdx) * lineHeight
             }">${escapeXml(line)}</tspan>`;
           })
-          .join(TOKEN_NL);
+          .join(`${TOKEN_NL}${" ".repeat(12)}`);
 
         const instantAnimDur = "0.000001s";
         const frameIds = frameIdxToId(frameIdx);
@@ -160,9 +156,9 @@ function createSvgAnimation(frames, outputPath) {
 
         return `
         <text x="${padding.x}" y="${padding.y}" class="frame" opacity="0">
-        ${text}
-        <animate id="${frameIds.enter}" attributeName="opacity" from="0" to="1" begin="${enterAnimBegin}" dur="${instantAnimDur}" fill="freeze" />
-        <animate id="${frameIds.leave}" attributeName="opacity" from="1" to="0" begin="${frameIds.enter}.end+${secondsPerFrame}s" dur="${instantAnimDur}" fill="freeze" />
+            ${text}
+            <animate id="${frameIds.enter}" attributeName="opacity" from="0" to="1" begin="${enterAnimBegin}" dur="${instantAnimDur}" fill="freeze" />
+            <animate id="${frameIds.leave}" attributeName="opacity" from="1" to="0" begin="${frameIds.enter}.end+${secondsPerFrame}s" dur="${instantAnimDur}" fill="freeze" />
         </text>`;
       })
       .join("\n")}
