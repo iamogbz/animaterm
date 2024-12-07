@@ -108,8 +108,7 @@ function createSvgAnimation(frames, outputPath) {
   };
 
   // Generate SVG content
-  const svgContent = `
-<?xml version="1.0" encoding="UTF-8"?>
+  const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
     <style>
     .frame {
