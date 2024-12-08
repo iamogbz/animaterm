@@ -8,7 +8,7 @@ const { JSDOM } = require("jsdom");
 const TOKEN_NL = "\n";
 const SEC_TO_MS = 1000;
 
-// TODO: export config
+/** @type {Config} TODO: export config */
 const config = {
   title: "Automated Terminal Interaction Animation",
   lineCount: 24,
@@ -106,7 +106,7 @@ function escapeXml(unsafe) {
 /**
  * Creates an SVG animation with multiple frames of text.
  *
- * @param {string[][]} frames - An array of text lines frames to animate.
+ * @param {State['frames']} frames - An array of text lines frames to animate.
  * @param {string} outputPath - The path to save the SVG file.
  */
 function createSvgAnimation(frames, outputPath) {
@@ -176,7 +176,7 @@ function createSvgAnimation(frames, outputPath) {
 /**
  * Get all lines that have been displayed in the terminal as list
  *
- * @param {{ terminalContent: string; }} state
+ * @param {State} state
  */
 function getTerminalLines(state) {
   return state.terminalContent.split(TOKEN_NL);
@@ -194,11 +194,11 @@ function msToFrameCount(ms) {
 /**
  * Get visible lines from the terminal content as list
  *
- * @param {{ frames: string[][]; terminalContent: string; }} state
+ * @param {State} state
  */
 function getVisibleTerminalLines(state) {
   const paddingLength = 5;
-  const lineNumber = (n) =>
+  const lineNumber = (/** @type {number} */ n) =>
     config.animation.lineNumber
       ? `${" ".repeat(paddingLength)}${n}`.substring(`${n}`.length)
       : n.toString();
@@ -218,7 +218,7 @@ function getVisibleTerminalLines(state) {
 /**
  * Record a frame of the terminal state
  *
- * @param {{ frames: string[][]; terminalContent: string; }} state
+ * @param {State} state
  */
 function recordFrame(state) {
   state.frames.push(getVisibleTerminalLines(state));
@@ -227,7 +227,7 @@ function recordFrame(state) {
 /**
  * Delay function
  *
- * @param {{ frames: string[][]; terminalContent: string; }} state
+ * @param {State} state
  * @param {number} ms
  */
 function delay(state, ms) {
@@ -241,7 +241,7 @@ function delay(state, ms) {
 /**
  * Get visible lines from the terminal content as single string blob
  *
- * @param {{ frames: string[][]; terminalContent: string; }} state
+ * @param {State} state
  */
 function getVisibleTerminalContent(state) {
   return getVisibleTerminalLines(state).join(TOKEN_NL);
@@ -250,7 +250,7 @@ function getVisibleTerminalContent(state) {
 /**
  * Update the terminal's display content
  *
- * @param {{ clipboard?: string; frames: string[][]; terminalContent: any; }} state
+ * @param {State} state
  */
 function updateTerminal(state) {
   terminalBox.setContent(getVisibleTerminalContent(state));
@@ -261,7 +261,7 @@ function updateTerminal(state) {
 /**
  * Utility to terminate and save recording
  *
- * @param {{ frames: string[][]; outputPath: string; terminalContent: string; }} state
+ * @param {State} state
  */
 async function finishRecording(state, exitCode = 0) {
   await delay(state, SEC_TO_MS * 5);
@@ -276,7 +276,7 @@ async function finishRecording(state, exitCode = 0) {
 /**
  * Utility to throw an error and abort execution
  *
- * @param {{ clipboard?: string | undefined; frames: string[][]; outputPath: string; pendingExecution: string; terminalContent: string; }} state
+ * @param {State} state
  * @param {string} errorMessage
  */
 function abortExecution(state, errorMessage) {
@@ -291,14 +291,9 @@ function abortExecution(state, errorMessage) {
 
 /**
   Registry of actions with their implementation
-  @type {
-    Record<string, (
-      step: { action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput"; payload: string | { startLine: number, endLine: number, startPos: number, endPos:number }; timeoutMs: number},
-      state: { env: Record<string, string | undefined>; frames: string[][]; pendingExecution:string; terminalContent: string; clipboard: string; }
-    ) => Promise<void>>
-  }
+  @type {ActionHandlers}
 */
-const actionsRegistry = Object.freeze({
+const actionsRegistry = {
   type: async ({ payload }, state) => {
     const text = `${payload}`;
     state.pendingExecution += text;
@@ -377,22 +372,22 @@ const actionsRegistry = Object.freeze({
       .join(TOKEN_NL);
     state.clipboard = textToCopy;
   },
-  clear: async (step, state) => {
-    await actionsRegistry.type({ ...step, payload: "clear" }, state);
+  clear: async (_, state) => {
+    await actionsRegistry.type({ action: "type", payload: "clear" }, state);
     state.pendingExecution = "";
     state.terminalContent = "";
     updateTerminal(state);
   },
-});
+};
 
 /**
  * Simulate steps with dynamic handling of actions
  *
- * @param {object[]} steps
+ * @param {Step[]} steps
  * @param {string} outputPath
  */
 async function simulateSteps(steps, outputPath) {
-  // Run core simulation
+  /** @type {State} */
   const state = {
     clipboard: "",
     env: { ...process.env },
@@ -408,9 +403,9 @@ async function simulateSteps(steps, outputPath) {
 
   try {
     for (const step of steps) {
-      const action = actionsRegistry[step.action];
-      if (action) {
-        await action(step, state);
+      if (step.action in actionsRegistry) {
+        // @ts-ignore faulty type intersection
+        await actionsRegistry[step.action](step, state);
       } else {
         await abortExecution(state, `Unknown action: ${step.action}`);
       }
