@@ -23,6 +23,7 @@ interface Config {
     fps: number;
     lineNumber: boolean;
     quality: number;
+    renderer: "gif" | "svg" | "terminalizer";
     /** 0 means repeat forever */
     repeat: number;
     typing: {
@@ -31,6 +32,9 @@ interface Config {
     msPerFrame: number;
   };
 }
+
+/** Returns the file path the render was saved at */
+type Renderer = (state: State, config: Config) => string;
 
 interface State {
   clipboard: string;

@@ -16,6 +16,8 @@ Run the `animaterm` bin with cli options
 animaterm script.json output.svg
 ```
 
+> Also supports [`.gif`](./docs/usage.gif) as the output format
+
 ![demo](./docs/usage.svg)
 
 > This demo animation was created using only `animaterm`
@@ -32,15 +34,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-```ts
-interface Step {
-  action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput";
-  payload:
-    | string
-    | { startLine: number; endLine: number; startPos: number; endPos: number };
-  timeoutMs: number;
-}
-```
+> TODO: link to interface 48:78
 
 #### Descriptions
 
@@ -72,6 +66,7 @@ Wait for data in `payload` to be displayed in the terminal
 
 ### Config
 
+> TODO: add link to interface 1:34
 > TODO: add instructions on overriding the default config
 
 ## Inspirations
