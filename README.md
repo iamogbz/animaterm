@@ -34,7 +34,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-> TODO: link to interface 48:78
+https://github.com/iamogbz/animaterm/blob/71e99f8ebed5bf7d9af6c6bc9914b4bf624c16f6/src/types.d.ts#L48-L78
 
 #### Descriptions
 
@@ -66,7 +66,10 @@ Wait for data in `payload` to be displayed in the terminal
 
 ### Config
 
-> TODO: add link to interface 1:34
+Defined by the interface `Config`:
+
+https://github.com/iamogbz/animaterm/blob/71e99f8ebed5bf7d9af6c6bc9914b4bf624c16f6/src/types.d.ts#L1-L34
+
 > TODO: add instructions on overriding the default config
 
 ## Inspirations
