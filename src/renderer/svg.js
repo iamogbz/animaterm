@@ -29,11 +29,9 @@ function escapeXml(unsafe) {
 
 /**
  * Creates an SVG animation with multiple frames of text.
- *
- * @param {State} state - An array of text lines frames to animate.
- * @param {Config} config - The path to save the SVG file.
+ * @type {Renderer}
  */
-function render(state, config) {
+const render = (state, config) => {
   const { frames, outputPath } = state;
   const secondsPerFrame = toDecimalPlaces(
     config.animation.msPerFrame / SEC_TO_MS,
@@ -98,6 +96,6 @@ function render(state, config) {
   fs.writeFileSync(filePath, svgContent, "utf8");
 
   return filePath;
-}
+};
 
 module.exports = { render };

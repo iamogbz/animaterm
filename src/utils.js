@@ -18,7 +18,10 @@ function getExtension(filePath) {
 function setExtension(filePath, targetExt) {
   const extName = path.extname(filePath);
   const indexToReplace = filePath.lastIndexOf(extName);
-  return filePath.substring(0, indexToReplace) + `.${targetExt}`;
+  return (
+    filePath.substring(0, indexToReplace) +
+    (targetExt && `${TOKEN_EXT}${targetExt}`)
+  );
 }
 
 module.exports = { getExtension, setExtension };
