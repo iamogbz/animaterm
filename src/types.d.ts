@@ -55,6 +55,10 @@ interface StepArgs {
     };
   };
   clear: {};
+  /** Deletes only from the lastest entry */
+  delete: {
+    payload: number;
+  };
   enter: {};
   /** Pastes from internal clipboard not system */
   paste: {};

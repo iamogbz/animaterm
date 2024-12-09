@@ -50,7 +50,7 @@ const config = {
     /** 0 means repeat forever */
     repeat: 0,
     typing: {
-      speedMs: 20,
+      speedMs: 30,
     },
     get msPerFrame() {
       return SEC_TO_MS / this.fps;
@@ -203,6 +203,10 @@ function abortExecution(state, errorMessage) {
   return finishRecording(state, 1);
 }
 
+function randomTypeSpeedMs() {
+  return (1 + Math.random()) * config.animation.typing.speedMs;
+}
+
 /**
   Registry of actions with their implementation
   @type {ActionHandlers}
@@ -215,8 +219,20 @@ const actionsRegistry = {
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
+      await delay(state, randomTypeSpeedMs());
     }
+    await delay(state, randomTypeSpeedMs());
+  },
+  delete: async (step, state) => {
+    const deleteSlowDownMult = 3;
+    if (typeof step.payload !== "number")
+      throw Error(`Faulty payload: ${JSON.stringify(step)}`);
+    for (let i = 0; i < step.payload; i++) {
+      state.terminalContent = state.terminalContent.slice(0, -1);
+      updateTerminal(state);
+      await delay(state, randomTypeSpeedMs() * deleteSlowDownMult);
+    }
+    await delay(state, randomTypeSpeedMs() * deleteSlowDownMult);
   },
   /** execute the last set of instructions typed */
   enter: async (_, state) => {
@@ -272,6 +288,7 @@ const actionsRegistry = {
     await delay(state, SEC_TO_MS);
   },
   copy: async (step, state) => {
+    // TODO: show copy highlight in the terminal with delay
     if (typeof step.payload !== "object")
       throw Error(`Faulty payload: ${JSON.stringify(step)}`);
     const { startLine, startPos, endLine, endPos } = step.payload;
