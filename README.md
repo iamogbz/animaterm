@@ -10,6 +10,12 @@ Install from the github repo
 npm i -g 'github:iamogbz/animaterm'
 ```
 
+> You do not need the peer dependencies except you need to render in the `gif` format
+>
+> The terminalizer (`tlz`) renderer produces better gifs but requires an additional dependency
+>
+> TODO: support rendering fancy console text colors and formatting
+
 Run the `animaterm` bin with cli options
 
 ```sh
@@ -36,7 +42,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L49-L83
+https://github.com/iamogbz/animaterm/blob/d277aae/src/types.d.ts#L49-L83
 
 #### Descriptions
 
@@ -70,7 +76,7 @@ Wait for data in `payload` to be displayed in the terminal
 
 Defined by the interface `Config`:
 
-https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L1-L35
+https://github.com/iamogbz/animaterm/blob/d277aae/src/types.d.ts#L1-L35
 
 > TODO: add instructions on overriding the default config
 
