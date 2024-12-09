@@ -17,6 +17,8 @@ animaterm script.json output.svg
 ```
 
 > Also supports [`.gif`](./docs/usage.gif) as the output format
+>
+> Set the renderer using the output extension e.g. `output.gif` or `output.tlz`
 
 ![demo](./docs/usage.svg)
 
@@ -34,7 +36,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-https://github.com/iamogbz/animaterm/blob/71e99f8ebed5bf7d9af6c6bc9914b4bf624c16f6/src/types.d.ts#L48-L78
+<https://github.com/iamogbz/animaterm/blob/HEAD/src/types.d.ts#L49-L79>
 
 #### Descriptions
 
@@ -68,7 +70,7 @@ Wait for data in `payload` to be displayed in the terminal
 
 Defined by the interface `Config`:
 
-https://github.com/iamogbz/animaterm/blob/71e99f8ebed5bf7d9af6c6bc9914b4bf624c16f6/src/types.d.ts#L1-L34
+<https://github.com/iamogbz/animaterm/blob/HEAD/src/types.d.ts#L1-L35>
 
 > TODO: add instructions on overriding the default config
 

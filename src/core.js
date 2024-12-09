@@ -2,7 +2,7 @@ const blessed = require("blessed");
 const { exec } = require("child_process");
 const gif = require("./renderer/gif");
 const svg = require("./renderer/svg");
-const trmnlzr = require("./renderer/terminalizer");
+const terminalizer = require("./renderer/terminalizer");
 const { TOKEN_NL, SEC_TO_MS } = require("./constants");
 const { getExtension } = require("./utils");
 
@@ -173,7 +173,7 @@ async function finishRecording(state, exitCode = 0) {
   await delay(state, SEC_TO_MS * 5);
 
   const renderers = {
-    terminalizer: trmnlzr.render,
+    tlz: terminalizer.render,
     gif: gif.render,
     svg: svg.render,
   };

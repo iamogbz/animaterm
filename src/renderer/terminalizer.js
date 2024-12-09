@@ -46,8 +46,6 @@ function writeFramesToTerminalizerRecording(state, config) {
   rows: ${config.lineCount}
 
 records:
-#  - delay: ${delay}
-#    content: "\\e"
 ${state.frames
   .map((lines) =>
     [
@@ -55,8 +53,9 @@ ${state.frames
       "    content: " +
         JSON.stringify(
           [
+            "[lineholder]", // used to fix first line placement in final render
             ...lines,
-            ...Array(config.lineCount - lines.length + 1).fill(""),
+            ...Array(config.lineCount - lines.length).fill(""),
           ].join("\n\r")
         ).replace(/"$/, '\\e"'),
     ].join(TOKEN_NL)

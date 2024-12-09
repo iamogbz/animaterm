@@ -23,7 +23,8 @@ interface Config {
     fps: number;
     lineNumber: boolean;
     quality: number;
-    renderer: "gif" | "svg" | "terminalizer";
+    /** Terminalizer (tlz) renders a GIF as well */
+    renderer: "gif" | "svg" | "tlz";
     /** 0 means repeat forever */
     repeat: number;
     typing: {
