@@ -36,7 +36,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-https://github.com/iamogbz/animaterm/blob/HEAD/src/types.d.ts#L49-L79
+https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L49-L83
 
 #### Descriptions
 
@@ -70,7 +70,7 @@ Wait for data in `payload` to be displayed in the terminal
 
 Defined by the interface `Config`:
 
-https://github.com/iamogbz/animaterm/blob/HEAD/src/types.d.ts#L1-L35
+https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L1-L35
 
 > TODO: add instructions on overriding the default config
 
