@@ -16,6 +16,10 @@ Run the `animaterm` bin with cli options
 animaterm script.json output.svg
 ```
 
+> Also supports [`.gif`](./docs/usage.gif) as the output format
+>
+> Set the renderer using the output extension e.g. `output.gif` or `output.tlz`
+
 ![demo](./docs/usage.svg)
 
 > This demo animation was created using only `animaterm`
@@ -32,15 +36,7 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-```ts
-interface Step {
-  action: "clear" | "copy" | "enter" | "paste" | "type" | "waitForOutput";
-  payload:
-    | string
-    | { startLine: number; endLine: number; startPos: number; endPos: number };
-  timeoutMs: number;
-}
-```
+https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L49-L83
 
 #### Descriptions
 
@@ -71,6 +67,10 @@ Simulate user typing characters from text in `payload`
 Wait for data in `payload` to be displayed in the terminal
 
 ### Config
+
+Defined by the interface `Config`:
+
+https://github.com/iamogbz/animaterm/blob/50f983c/src/types.d.ts#L1-L35
 
 > TODO: add instructions on overriding the default config
 

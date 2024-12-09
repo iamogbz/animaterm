@@ -1,12 +1,10 @@
 const blessed = require("blessed");
-const fs = require("fs");
-const path = require("path");
 const { exec } = require("child_process");
-const { JSDOM } = require("jsdom");
-
-// constants
-const TOKEN_NL = "\n";
-const SEC_TO_MS = 1000;
+const gif = require("./renderer/gif");
+const svg = require("./renderer/svg");
+const terminalizer = require("./renderer/terminalizer");
+const { TOKEN_NL, SEC_TO_MS } = require("./constants");
+const { getExtension } = require("./utils");
 
 /** @type {Config} TODO: export config */
 const config = {
@@ -48,10 +46,11 @@ const config = {
     fps: 15,
     lineNumber: true,
     quality: 10,
+    renderer: "svg",
     /** 0 means repeat forever */
     repeat: 0,
     typing: {
-      speedMs: 20,
+      speedMs: 30,
     },
     get msPerFrame() {
       return SEC_TO_MS / this.fps;
@@ -79,99 +78,6 @@ const terminalBox = blessed.box({
 });
 
 screen.append(terminalBox);
-
-/**
- * Round a number to a specified number of decimal places.
- *
- * @param {number} n - The number to round.
- * @param {number} dp - The number of decimal places to round to.
- */
-function toDecimalPlaces(n, dp) {
-  return Math.round((n + Number.EPSILON) * Math.pow(10, dp)) / Math.pow(10, dp);
-}
-
-const dom = new JSDOM("");
-const escapeElem = dom.window.document.createElement("textarea");
-
-/**
- * Escape special XML characters for safe embedding in SVG content.
- *
- * @param {string} unsafe - The input text to be escaped
- */
-function escapeXml(unsafe) {
-  escapeElem.textContent = unsafe;
-  return escapeElem.innerHTML;
-}
-
-/**
- * Creates an SVG animation with multiple frames of text.
- *
- * @param {State['frames']} frames - An array of text lines frames to animate.
- * @param {string} outputPath - The path to save the SVG file.
- */
-function createSvgAnimation(frames, outputPath) {
-  const secondsPerFrame = toDecimalPlaces(
-    config.animation.msPerFrame / SEC_TO_MS,
-    2
-  );
-  const { height, lineHeight, padding, width } = config.dimensionsPx;
-  const frameIdxToId = (/** @type {number} */ i) => {
-    const animFrame = `frame${i + 1}`;
-    return {
-      enter: `${animFrame}enter`,
-      leave: `${animFrame}leave`,
-    };
-  };
-
-  // Generate SVG content
-  const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">
-    <style>
-    .frame {
-        fill: ${config.animation.css.color};
-        font-family: ${config.animation.css.fontStyle};
-        font-size: ${config.animation.css.fontSize};
-        text-anchor: start;
-    }
-    </style>
-    <rect width="${width}" height="${height}" fill="${
-    config.animation.css.backgroundColor
-  }" />
-    ${frames
-      .map((lines, frameIdx) => {
-        const startSecs = frameIdx * secondsPerFrame;
-        const text = lines
-          .map((line, lineIdx) => {
-            const dx = padding.x;
-            const dy = Math.min(1, lineIdx) * lineHeight;
-            const sanitizedLine = escapeXml(line);
-            return `<tspan x="${dx}" dy="${dy}" xml:space="preserve">${sanitizedLine}</tspan>`;
-          })
-          .join(`${TOKEN_NL}${" ".repeat(12)}`);
-
-        const instantAnimDur = "0.000001s";
-        const frameIds = frameIdxToId(frameIdx);
-        const previousFrameIds = frameIdxToId(frameIdx - 1);
-        const enterAnimBegin = frameIdx
-          ? `${previousFrameIds.leave}.end`
-          : `${startSecs}s; ${frameIdxToId(frames.length - 1).leave}.end`;
-
-        return `
-        <text x="${padding.x}" y="${padding.y}" class="frame" opacity="0" xml:space="preserve">
-            ${text}
-            <animate id="${frameIds.enter}" attributeName="opacity" from="0" to="1" begin="${enterAnimBegin}" dur="${instantAnimDur}" fill="freeze" />
-            <animate id="${frameIds.leave}" attributeName="opacity" from="1" to="0" begin="${frameIds.enter}.end+${secondsPerFrame}s" dur="${instantAnimDur}" fill="freeze" />
-        </text>`;
-      })
-      .join("\n")}
-</svg>
-    `;
-
-  // Write SVG content to file
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, svgContent, "utf8");
-  console.log(`SVG animation created at ${outputPath}`);
-}
 
 /**
  * Get all lines that have been displayed in the terminal as list
@@ -265,11 +171,19 @@ function updateTerminal(state) {
  */
 async function finishRecording(state, exitCode = 0) {
   await delay(state, SEC_TO_MS * 5);
-  const { frames, outputPath } = state;
 
-  createSvgAnimation(frames, outputPath);
+  const renderers = {
+    tlz: terminalizer.render,
+    gif: gif.render,
+    svg: svg.render,
+  };
+  const fileExt = getExtension(state.outputPath);
+  const renderFormat =
+    fileExt in renderers ? fileExt : config.animation.renderer;
 
-  console.log("Recording saved as", outputPath);
+  const filePath = renderers[renderFormat](state, config);
+
+  console.log("Recording saved as", filePath);
   process.exit(exitCode);
 }
 
@@ -289,6 +203,10 @@ function abortExecution(state, errorMessage) {
   return finishRecording(state, 1);
 }
 
+function randomTypeSpeedMs() {
+  return (1 + Math.random()) * config.animation.typing.speedMs;
+}
+
 /**
   Registry of actions with their implementation
   @type {ActionHandlers}
@@ -301,8 +219,20 @@ const actionsRegistry = {
       state.terminalContent += char;
       updateTerminal(state);
       // randomise type speed
-      await delay(state, (1 + Math.random()) * config.animation.typing.speedMs);
+      await delay(state, randomTypeSpeedMs());
     }
+    await delay(state, randomTypeSpeedMs());
+  },
+  delete: async (step, state) => {
+    const deleteSlowDownMult = 3;
+    if (typeof step.payload !== "number")
+      throw Error(`Faulty payload: ${JSON.stringify(step)}`);
+    for (let i = 0; i < step.payload; i++) {
+      state.terminalContent = state.terminalContent.slice(0, -1);
+      updateTerminal(state);
+      await delay(state, randomTypeSpeedMs() * deleteSlowDownMult);
+    }
+    await delay(state, randomTypeSpeedMs() * deleteSlowDownMult);
   },
   /** execute the last set of instructions typed */
   enter: async (_, state) => {
@@ -358,6 +288,7 @@ const actionsRegistry = {
     await delay(state, SEC_TO_MS);
   },
   copy: async (step, state) => {
+    // TODO: show copy highlight in the terminal with delay
     if (typeof step.payload !== "object")
       throw Error(`Faulty payload: ${JSON.stringify(step)}`);
     const { startLine, startPos, endLine, endPos } = step.payload;

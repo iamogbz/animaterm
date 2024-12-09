@@ -23,6 +23,8 @@ interface Config {
     fps: number;
     lineNumber: boolean;
     quality: number;
+    /** Terminalizer (tlz) renders a GIF as well */
+    renderer: "gif" | "svg" | "tlz";
     /** 0 means repeat forever */
     repeat: number;
     typing: {
@@ -31,6 +33,9 @@ interface Config {
     msPerFrame: number;
   };
 }
+
+/** Returns the file path the render was saved at */
+type Renderer = (state: State, config: Config) => string;
 
 interface State {
   clipboard: string;
@@ -51,6 +56,10 @@ interface StepArgs {
     };
   };
   clear: {};
+  /** Deletes only from the lastest entry */
+  delete: {
+    payload: number;
+  };
   enter: {};
   /** Pastes from internal clipboard not system */
   paste: {};

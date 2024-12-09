@@ -1,5 +1,7 @@
 [
-  { "action": "type", "payload": "seq 1 100" },
+  { "action": "type", "payload": "seq 1 00" },
+  { "action": "delete", "payload": 2 },
+  { "action": "type", "payload": "100" },
   { "action": "enter" },
   { "action": "type", "payload": "echo 'Hello, world!'" },
   { "action": "enter" },
