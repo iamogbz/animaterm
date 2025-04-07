@@ -42,41 +42,13 @@ Step[]
 
 That is a `JSON` array at the root where each `Step` is defined by the following interface:
 
-https://github.com/iamogbz/animaterm/blob/d277aae/src/types.d.ts#L49-L83
-
-#### Descriptions
-
-##### clear
-
-Flush terminal output
-
-##### copy
-
-Copy from start line and position to end line and position as defined in `payload`
-
-##### enter
-
-Return and run commands typed in previous steps
-
-##### paste
-
-Paste last copied text
-
-> NOTE: does not paste from system clipboard
-
-##### type
-
-Simulate user typing characters from text in `payload`
-
-##### waitForOutput
-
-Wait for data in `payload` to be displayed in the terminal
+https://github.com/iamogbz/animaterm/blob/027ff13/src/types.d.ts#L49-L89
 
 ### Config
 
 Defined by the interface `Config`:
 
-https://github.com/iamogbz/animaterm/blob/d277aae/src/types.d.ts#L1-L35
+https://github.com/iamogbz/animaterm/blob/027ff13/src/types.d.ts#L1-L35
 
 > TODO: add instructions on overriding the default config
 

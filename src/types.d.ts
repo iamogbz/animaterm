@@ -47,29 +47,35 @@ interface State {
 }
 
 interface StepArgs {
+  /** Copy from start line and column position to end line and position */
   copy: {
     payload: {
       startLine: number;
-      endLine: number;
       startPos: number;
+      endLine: number;
       endPos: number;
     };
   };
+  /** Flush terminal output */
   clear: {};
   /** Deletes only from the lastest entry */
   delete: {
     payload: number;
   };
+  /** Return and run commands typed in previous steps */
   enter: {};
   /** Pastes from internal clipboard not system */
   paste: {};
+  /** Simulate user typing characters from text in payload */
   type: {
     /** the text to type */
     payload: string;
   };
+  /** Wait for data in payload to be displayed in the terminal */
   waitForOutput: {
     /** the text to wait for */
     payload: string;
+    /** How long to wait before terminating run */
     timeoutMs: number;
   };
 }
