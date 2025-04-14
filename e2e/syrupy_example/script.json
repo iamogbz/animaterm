@@ -1,0 +1,41 @@
+[
+  { "action": "type", "payload": "python -m pip install -U pytest syrupy" },
+  { "action": "enter" },
+  {
+    "action": "type",
+    "payload": "echo '\ndef test_case(snapshot):\n  assert \"syrupy is amazing!\" == snapshot\n\ndef test_other(snapshot):\n  assert \"this is amazing\" == snapshot\n  assert dict(key=\"value\", hmm=[1,2]) == snapshot' > test_file.py"
+  },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest -vv" },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest --snapshot-update" },
+  { "action": "enter" },
+  { "action": "type", "payload": "ls -l" },
+  { "action": "enter" },
+  { "action": "type", "payload": "ls -l __snapshots__" },
+  { "action": "enter" },
+  { "action": "type", "payload": "cat __snapshots__/test_file.ambr" },
+  { "action": "enter" },
+  {
+    "action": "type",
+    "payload": "sed -i '6s/amazing/amazing!/' test_file.py"
+  },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest -vv" },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest --snapshot-update" },
+  { "action": "enter" },
+  {
+    "action": "type",
+    "payload": "sed -i '7s/1,2/2/' test_file.py"
+  },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest -vv" },
+  { "action": "enter" },
+  { "action": "type", "payload": "python -m pytest --snapshot-update" },
+  { "action": "enter" },
+  { "action": "type", "payload": "cat __snapshots__/test_file.ambr" },
+  { "action": "enter" },
+  { "action": "type", "payload": "exit" },
+  { "action": "enter" }
+]
