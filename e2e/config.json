@@ -1,0 +1,31 @@
+{
+  "title": "E2E Test Config",
+  "lineCount": 18,
+  "dimensionsPx": {
+    "gap": 4,
+    "padding": {
+      "x": 10,
+      "y": 20
+    },
+    "text": 16,
+    "width": 800
+  },
+  "animation": {
+    "css": {
+      "backgroundColor": "#2282AE",
+      "borderColor": "grey"
+    },
+    "cursor": {
+      "blinkMs": 3000,
+      "token": "▃"
+    },
+    "fps": 15,
+    "lineNumber": true,
+    "quality": 10,
+    "renderer": "svg",
+    "repeat": 0,
+    "typing": {
+      "speedMs": 10
+    }
+  }
+}

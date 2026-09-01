@@ -23,6 +23,17 @@
   },
   {
     "action": "type",
+    "payload": "# CREATE OPTIONAL CONFIG JSON FILE\n\n# > SEE `src/config.json` for the default config\nand `src/types.d.ts` for the structure.\n\n"
+  },
+  {
+    "action": "type",
+    "payload": "cat 'src/config.json'"
+  },
+  {
+    "action": "enter"
+  },
+  {
+    "action": "type",
     "payload": "\n# USAGE EXAMPLE BEGINS BELOW\n\n"
   },
   {
