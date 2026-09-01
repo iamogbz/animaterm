@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OUTPUT_PATH: ./recordings/output.svg
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     steps:
       # Step 1: Checkout the repository
@@ -57,6 +58,5 @@ jobs:
       - name: Post or update comment
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm build-comment
