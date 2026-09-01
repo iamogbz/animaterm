@@ -12,7 +12,7 @@
       
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
               <tspan x="10" dy="0" xml:space="preserve">    1:$ s█</tspan>
-              <animate id="frame1enter" attributeName="opacity" from="0" to="1" begin="0s; frame289leave.end" dur="0.000001s" fill="freeze" />
+              <animate id="frame1enter" attributeName="opacity" from="0" to="1" begin="0s; frame288leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame1leave" attributeName="opacity" from="1" to="0" begin="frame1enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
@@ -71,7 +71,7 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 0</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 </tspan>
               <animate id="frame11enter" attributeName="opacity" from="0" to="1" begin="frame10leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame11leave" attributeName="opacity" from="1" to="0" begin="frame11enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -95,25 +95,26 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 █</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 1█</tspan>
               <animate id="frame15enter" attributeName="opacity" from="0" to="1" begin="frame14leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame15leave" attributeName="opacity" from="1" to="0" begin="frame15enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 1█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 10█</tspan>
               <animate id="frame16enter" attributeName="opacity" from="0" to="1" begin="frame15leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame16leave" attributeName="opacity" from="1" to="0" begin="frame16enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 10█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 100█</tspan>
               <animate id="frame17enter" attributeName="opacity" from="0" to="1" begin="frame16leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame17leave" attributeName="opacity" from="1" to="0" begin="frame17enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 100█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 100</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">    2:$ █</tspan>
               <animate id="frame18enter" attributeName="opacity" from="0" to="1" begin="frame17leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame18leave" attributeName="opacity" from="1" to="0" begin="frame18enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -217,13 +218,6 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 100</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">    2:$ █</tspan>
-              <animate id="frame33enter" attributeName="opacity" from="0" to="1" begin="frame32leave.end" dur="0.000001s" fill="freeze" />
-              <animate id="frame33leave" attributeName="opacity" from="1" to="0" begin="frame33enter.end+0.07s" dur="0.000001s" fill="freeze" />
-          </text>
-
-          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
               <tspan x="10" dy="0" xml:space="preserve">   79:$ 78</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   80:$ 79</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   81:$ 80</tspan>
@@ -248,6 +242,35 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ █</tspan>
+              <animate id="frame33enter" attributeName="opacity" from="0" to="1" begin="frame32leave.end" dur="0.000001s" fill="freeze" />
+              <animate id="frame33leave" attributeName="opacity" from="1" to="0" begin="frame33enter.end+0.07s" dur="0.000001s" fill="freeze" />
+          </text>
+
+          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
+              <tspan x="10" dy="0" xml:space="preserve">   80:$ 79</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   81:$ 80</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   82:$ 81</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   83:$ 82</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   85:$ 84</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   86:$ 85</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   87:$ 86</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   88:$ 87</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   89:$ 88</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   90:$ 89</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   91:$ 90</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   92:$ 91</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   93:$ 92</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   94:$ 93</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   95:$ 94</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   96:$ 95</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   97:$ 96</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   98:$ 97</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   99:$ 98</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ █</tspan>
               <animate id="frame34enter" attributeName="opacity" from="0" to="1" begin="frame33leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame34leave" attributeName="opacity" from="1" to="0" begin="frame34enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -682,7 +705,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ e█</tspan>
               <animate id="frame49enter" attributeName="opacity" from="0" to="1" begin="frame48leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame49leave" attributeName="opacity" from="1" to="0" begin="frame49enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -711,7 +734,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ e█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ ec█</tspan>
               <animate id="frame50enter" attributeName="opacity" from="0" to="1" begin="frame49leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame50leave" attributeName="opacity" from="1" to="0" begin="frame50enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -740,7 +763,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ ec</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ ech</tspan>
               <animate id="frame51enter" attributeName="opacity" from="0" to="1" begin="frame50leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame51leave" attributeName="opacity" from="1" to="0" begin="frame51enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -769,7 +792,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ ech</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo</tspan>
               <animate id="frame52enter" attributeName="opacity" from="0" to="1" begin="frame51leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame52leave" attributeName="opacity" from="1" to="0" begin="frame52enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -798,7 +821,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo </tspan>
               <animate id="frame53enter" attributeName="opacity" from="0" to="1" begin="frame52leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame53leave" attributeName="opacity" from="1" to="0" begin="frame53enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -827,7 +850,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo '</tspan>
               <animate id="frame54enter" attributeName="opacity" from="0" to="1" begin="frame53leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame54leave" attributeName="opacity" from="1" to="0" begin="frame54enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -856,7 +879,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo '</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'H</tspan>
               <animate id="frame55enter" attributeName="opacity" from="0" to="1" begin="frame54leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame55leave" attributeName="opacity" from="1" to="0" begin="frame55enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -885,7 +908,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'H</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'He</tspan>
               <animate id="frame56enter" attributeName="opacity" from="0" to="1" begin="frame55leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame56leave" attributeName="opacity" from="1" to="0" begin="frame56enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -914,7 +937,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'He█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hel█</tspan>
               <animate id="frame57enter" attributeName="opacity" from="0" to="1" begin="frame56leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame57leave" attributeName="opacity" from="1" to="0" begin="frame57enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -943,7 +966,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hel█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hell█</tspan>
               <animate id="frame58enter" attributeName="opacity" from="0" to="1" begin="frame57leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame58leave" attributeName="opacity" from="1" to="0" begin="frame58enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -972,7 +995,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hell█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello█</tspan>
               <animate id="frame59enter" attributeName="opacity" from="0" to="1" begin="frame58leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame59leave" attributeName="opacity" from="1" to="0" begin="frame59enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1001,7 +1024,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello,█</tspan>
               <animate id="frame60enter" attributeName="opacity" from="0" to="1" begin="frame59leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame60leave" attributeName="opacity" from="1" to="0" begin="frame60enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1030,7 +1053,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello,█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, █</tspan>
               <animate id="frame61enter" attributeName="opacity" from="0" to="1" begin="frame60leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame61leave" attributeName="opacity" from="1" to="0" begin="frame61enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1059,7 +1082,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, w█</tspan>
               <animate id="frame62enter" attributeName="opacity" from="0" to="1" begin="frame61leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame62leave" attributeName="opacity" from="1" to="0" begin="frame62enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1088,7 +1111,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, w█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, wo█</tspan>
               <animate id="frame63enter" attributeName="opacity" from="0" to="1" begin="frame62leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame63leave" attributeName="opacity" from="1" to="0" begin="frame63enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1117,7 +1140,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, wo█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, wor█</tspan>
               <animate id="frame64enter" attributeName="opacity" from="0" to="1" begin="frame63leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame64leave" attributeName="opacity" from="1" to="0" begin="frame64enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1146,7 +1169,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, wor</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, worl</tspan>
               <animate id="frame65enter" attributeName="opacity" from="0" to="1" begin="frame64leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame65leave" attributeName="opacity" from="1" to="0" begin="frame65enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1175,7 +1198,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, worl</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world</tspan>
               <animate id="frame66enter" attributeName="opacity" from="0" to="1" begin="frame65leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame66leave" attributeName="opacity" from="1" to="0" begin="frame66enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1204,7 +1227,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!</tspan>
               <animate id="frame67enter" attributeName="opacity" from="0" to="1" begin="frame66leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame67leave" attributeName="opacity" from="1" to="0" begin="frame67enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1233,14 +1256,13 @@
             <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
               <animate id="frame68enter" attributeName="opacity" from="0" to="1" begin="frame67leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame68leave" attributeName="opacity" from="1" to="0" begin="frame68enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">   80:$ 79</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   81:$ 80</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">   81:$ 80</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   82:$ 81</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   83:$ 82</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
@@ -1263,6 +1285,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  104:$ </tspan>
               <animate id="frame69enter" attributeName="opacity" from="0" to="1" begin="frame68leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame69leave" attributeName="opacity" from="1" to="0" begin="frame69enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -1674,35 +1697,6 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">   81:$ 80</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   82:$ 81</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   83:$ 82</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   85:$ 84</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   86:$ 85</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   87:$ 86</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   88:$ 87</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   89:$ 88</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   90:$ 89</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   91:$ 90</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   92:$ 91</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   93:$ 92</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   94:$ 93</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   95:$ 94</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   96:$ 95</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   97:$ 96</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   98:$ 97</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   99:$ 98</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  104:$ </tspan>
-              <animate id="frame84enter" attributeName="opacity" from="0" to="1" begin="frame83leave.end" dur="0.000001s" fill="freeze" />
-              <animate id="frame84leave" attributeName="opacity" from="1" to="0" begin="frame84enter.end+0.07s" dur="0.000001s" fill="freeze" />
-          </text>
-
-          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
               <tspan x="10" dy="0" xml:space="preserve">   82:$ 81</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   83:$ 82</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
@@ -1726,7 +1720,36 @@
             <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  105:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
+              <animate id="frame84enter" attributeName="opacity" from="0" to="1" begin="frame83leave.end" dur="0.000001s" fill="freeze" />
+              <animate id="frame84leave" attributeName="opacity" from="1" to="0" begin="frame84enter.end+0.07s" dur="0.000001s" fill="freeze" />
+          </text>
+
+          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
+              <tspan x="10" dy="0" xml:space="preserve">   83:$ 82</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   85:$ 84</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   86:$ 85</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   87:$ 86</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   88:$ 87</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   89:$ 88</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   90:$ 89</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   91:$ 90</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   92:$ 91</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   93:$ 92</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   94:$ 93</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   95:$ 94</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   96:$ 95</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   97:$ 96</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   98:$ 97</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">   99:$ 98</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ █</tspan>
               <animate id="frame85enter" attributeName="opacity" from="0" to="1" begin="frame84leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame85leave" attributeName="opacity" from="1" to="0" begin="frame85enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2161,7 +2184,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ l█</tspan>
               <animate id="frame100enter" attributeName="opacity" from="0" to="1" begin="frame99leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame100leave" attributeName="opacity" from="1" to="0" begin="frame100enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2190,7 +2213,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ l█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls█</tspan>
               <animate id="frame101enter" attributeName="opacity" from="0" to="1" begin="frame100leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame101leave" attributeName="opacity" from="1" to="0" begin="frame101enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2219,7 +2242,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls █</tspan>
               <animate id="frame102enter" attributeName="opacity" from="0" to="1" begin="frame101leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame102leave" attributeName="opacity" from="1" to="0" begin="frame102enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2248,7 +2271,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -█</tspan>
               <animate id="frame103enter" attributeName="opacity" from="0" to="1" begin="frame102leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame103leave" attributeName="opacity" from="1" to="0" begin="frame103enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2277,7 +2300,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -l█</tspan>
               <animate id="frame104enter" attributeName="opacity" from="0" to="1" begin="frame103leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame104leave" attributeName="opacity" from="1" to="0" begin="frame104enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2306,14 +2329,13 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -l█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -la█</tspan>
               <animate id="frame105enter" attributeName="opacity" from="0" to="1" begin="frame104leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame105leave" attributeName="opacity" from="1" to="0" begin="frame105enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">   83:$ 82</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   84:$ 83</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">   84:$ 83</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   85:$ 84</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   86:$ 85</tspan>
             <tspan x="10" dy="20" xml:space="preserve">   87:$ 86</tspan>
@@ -2335,7 +2357,8 @@
             <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -la█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -la</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  107:$ █</tspan>
               <animate id="frame106enter" attributeName="opacity" from="0" to="1" begin="frame105leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame106leave" attributeName="opacity" from="1" to="0" begin="frame106enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -2747,35 +2770,6 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">   84:$ 83</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   85:$ 84</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   86:$ 85</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   87:$ 86</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   88:$ 87</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   89:$ 88</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   90:$ 89</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   91:$ 90</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   92:$ 91</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   93:$ 92</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   94:$ 93</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   95:$ 94</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   96:$ 95</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   97:$ 96</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   98:$ 97</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">   99:$ 98</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  100:$ 99</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  101:$ 100</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  102:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  103:$ echo 'Hello, world!'</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  104:$ Hello, world!</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  105:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  106:$ ls -la</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  107:$ </tspan>
-              <animate id="frame121enter" attributeName="opacity" from="0" to="1" begin="frame120leave.end" dur="0.000001s" fill="freeze" />
-              <animate id="frame121leave" attributeName="opacity" from="1" to="0" begin="frame121enter.end+0.07s" dur="0.000001s" fill="freeze" />
-          </text>
-
-          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
               <tspan x="10" dy="0" xml:space="preserve">  107:$ total 212</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  108:$ drwxr-xr-x 10 runner runner   4096 Sep  1 19:34 .</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  109:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 ..</tspan>
@@ -2800,6 +2794,35 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
+              <animate id="frame121enter" attributeName="opacity" from="0" to="1" begin="frame120leave.end" dur="0.000001s" fill="freeze" />
+              <animate id="frame121leave" attributeName="opacity" from="1" to="0" begin="frame121enter.end+0.07s" dur="0.000001s" fill="freeze" />
+          </text>
+
+          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
+              <tspan x="10" dy="0" xml:space="preserve">  108:$ drwxr-xr-x 10 runner runner   4096 Sep  1 19:34 .</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  109:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 ..</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  110:$ -rw-r--r--  1 runner runner      0 Sep  1 19:34 .env</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  111:$ -rw-r--r--  1 runner runner     36 Sep  1 19:34 .env.example</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  112:$ drwxr-xr-x  7 runner runner   4096 Sep  1 19:34 .git</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  113:$ drwxr-xr-x  4 runner runner   4096 Sep  1 19:34 .github</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  114:$ -rw-r--r--  1 runner runner     49 Sep  1 19:34 .gitignore</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  115:$ -rw-r--r--  1 runner runner      9 Sep  1 19:34 .nvmrc</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  116:$ -rw-r--r--  1 runner runner     13 Sep  1 19:34 .prettierrc.toml</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  117:$ -rw-r--r--  1 runner runner   3349 Sep  1 19:34 CODE_OF_CONDUCT.md</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  118:$ -rw-r--r--  1 runner runner   1696 Sep  1 19:34 CONTRIBUTING.md</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  119:$ -rw-r--r--  1 runner runner   1211 Sep  1 19:34 LICENSE</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  120:$ -rw-r--r--  1 runner runner   1322 Sep  1 19:34 README.md</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  121:$ -rw-r--r--  1 runner runner     71 Sep  1 19:34 _config.yml</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  122:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 docs</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  123:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 e2e</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  124:$ drwxr-xr-x  6 runner runner   4096 Sep  1 19:34 node_modules</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  125:$ -rw-r--r--  1 runner runner    922 Sep  1 19:34 package.json</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  126:$ -rw-r--r--  1 runner runner 133704 Sep  1 19:34 pnpm-lock.yaml</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  127:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 recordings</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ </tspan>
               <animate id="frame122enter" attributeName="opacity" from="0" to="1" begin="frame121leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame122leave" attributeName="opacity" from="1" to="0" begin="frame122enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3234,7 +3257,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ c</tspan>
               <animate id="frame137enter" attributeName="opacity" from="0" to="1" begin="frame136leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame137leave" attributeName="opacity" from="1" to="0" begin="frame137enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3263,7 +3286,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ c</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ ca</tspan>
               <animate id="frame138enter" attributeName="opacity" from="0" to="1" begin="frame137leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame138leave" attributeName="opacity" from="1" to="0" begin="frame138enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3292,7 +3315,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ ca</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat</tspan>
               <animate id="frame139enter" attributeName="opacity" from="0" to="1" begin="frame138leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame139leave" attributeName="opacity" from="1" to="0" begin="frame139enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3321,7 +3344,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat </tspan>
               <animate id="frame140enter" attributeName="opacity" from="0" to="1" begin="frame139leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame140leave" attributeName="opacity" from="1" to="0" begin="frame140enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3350,7 +3373,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat p█</tspan>
               <animate id="frame141enter" attributeName="opacity" from="0" to="1" begin="frame140leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame141leave" attributeName="opacity" from="1" to="0" begin="frame141enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3379,7 +3402,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat p█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pa█</tspan>
               <animate id="frame142enter" attributeName="opacity" from="0" to="1" begin="frame141leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame142leave" attributeName="opacity" from="1" to="0" begin="frame142enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3408,7 +3431,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pa█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pac█</tspan>
               <animate id="frame143enter" attributeName="opacity" from="0" to="1" begin="frame142leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame143leave" attributeName="opacity" from="1" to="0" begin="frame143enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3437,7 +3460,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pac█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pack█</tspan>
               <animate id="frame144enter" attributeName="opacity" from="0" to="1" begin="frame143leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame144leave" attributeName="opacity" from="1" to="0" begin="frame144enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3466,7 +3489,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat pack█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat packa█</tspan>
               <animate id="frame145enter" attributeName="opacity" from="0" to="1" begin="frame144leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame145leave" attributeName="opacity" from="1" to="0" begin="frame145enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3495,7 +3518,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat packa█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat packag█</tspan>
               <animate id="frame146enter" attributeName="opacity" from="0" to="1" begin="frame145leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame146leave" attributeName="opacity" from="1" to="0" begin="frame146enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3524,7 +3547,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat packag█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package█</tspan>
               <animate id="frame147enter" attributeName="opacity" from="0" to="1" begin="frame146leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame147leave" attributeName="opacity" from="1" to="0" begin="frame147enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3553,7 +3576,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.█</tspan>
               <animate id="frame148enter" attributeName="opacity" from="0" to="1" begin="frame147leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame148leave" attributeName="opacity" from="1" to="0" begin="frame148enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3582,7 +3605,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.j</tspan>
               <animate id="frame149enter" attributeName="opacity" from="0" to="1" begin="frame148leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame149leave" attributeName="opacity" from="1" to="0" begin="frame149enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3611,7 +3634,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.j</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.js</tspan>
               <animate id="frame150enter" attributeName="opacity" from="0" to="1" begin="frame149leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame150leave" attributeName="opacity" from="1" to="0" begin="frame150enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3640,7 +3663,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.js</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.jso</tspan>
               <animate id="frame151enter" attributeName="opacity" from="0" to="1" begin="frame150leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame151leave" attributeName="opacity" from="1" to="0" begin="frame151enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -3669,14 +3692,13 @@
             <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.jso</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.json</tspan>
               <animate id="frame152enter" attributeName="opacity" from="0" to="1" begin="frame151leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame152leave" attributeName="opacity" from="1" to="0" begin="frame152enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">  108:$ drwxr-xr-x 10 runner runner   4096 Sep  1 19:34 .</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  109:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 ..</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">  109:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 ..</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  110:$ -rw-r--r--  1 runner runner      0 Sep  1 19:34 .env</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  111:$ -rw-r--r--  1 runner runner     36 Sep  1 19:34 .env.example</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  112:$ drwxr-xr-x  7 runner runner   4096 Sep  1 19:34 .git</tspan>
@@ -3699,6 +3721,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
             <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.json</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  132:$ </tspan>
               <animate id="frame153enter" attributeName="opacity" from="0" to="1" begin="frame152leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame153leave" attributeName="opacity" from="1" to="0" begin="frame153enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -4110,35 +4133,6 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">  109:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 ..</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  110:$ -rw-r--r--  1 runner runner      0 Sep  1 19:34 .env</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  111:$ -rw-r--r--  1 runner runner     36 Sep  1 19:34 .env.example</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  112:$ drwxr-xr-x  7 runner runner   4096 Sep  1 19:34 .git</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  113:$ drwxr-xr-x  4 runner runner   4096 Sep  1 19:34 .github</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  114:$ -rw-r--r--  1 runner runner     49 Sep  1 19:34 .gitignore</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  115:$ -rw-r--r--  1 runner runner      9 Sep  1 19:34 .nvmrc</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  116:$ -rw-r--r--  1 runner runner     13 Sep  1 19:34 .prettierrc.toml</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  117:$ -rw-r--r--  1 runner runner   3349 Sep  1 19:34 CODE_OF_CONDUCT.md</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  118:$ -rw-r--r--  1 runner runner   1696 Sep  1 19:34 CONTRIBUTING.md</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  119:$ -rw-r--r--  1 runner runner   1211 Sep  1 19:34 LICENSE</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  120:$ -rw-r--r--  1 runner runner   1322 Sep  1 19:34 README.md</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  121:$ -rw-r--r--  1 runner runner     71 Sep  1 19:34 _config.yml</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  122:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 docs</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  123:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 e2e</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  124:$ drwxr-xr-x  6 runner runner   4096 Sep  1 19:34 node_modules</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  125:$ -rw-r--r--  1 runner runner    922 Sep  1 19:34 package.json</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  126:$ -rw-r--r--  1 runner runner 133704 Sep  1 19:34 pnpm-lock.yaml</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  127:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 recordings</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  128:$ drwxr-xr-x  2 runner runner   4096 Sep  1 19:34 scripts</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  129:$ drwxr-xr-x  3 runner runner   4096 Sep  1 19:34 src</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  130:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  131:$ cat package.json</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  132:$ </tspan>
-              <animate id="frame168enter" attributeName="opacity" from="0" to="1" begin="frame167leave.end" dur="0.000001s" fill="freeze" />
-              <animate id="frame168leave" attributeName="opacity" from="1" to="0" begin="frame168enter.end+0.07s" dur="0.000001s" fill="freeze" />
-          </text>
-
-          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
               <tspan x="10" dy="0" xml:space="preserve">  149:$     "test": "jest --detectOpenHandles",</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  150:$     "type-check": "tsc"</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  151:$   },</tspan>
@@ -4162,7 +4156,36 @@
             <tspan x="10" dy="20" xml:space="preserve">  169:$     "typescript": "^5.7.2"</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  170:$   }</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  171:$ }</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  172:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  172:$ </tspan>
+              <animate id="frame168enter" attributeName="opacity" from="0" to="1" begin="frame167leave.end" dur="0.000001s" fill="freeze" />
+              <animate id="frame168leave" attributeName="opacity" from="1" to="0" begin="frame168enter.end+0.07s" dur="0.000001s" fill="freeze" />
+          </text>
+
+          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
+              <tspan x="10" dy="0" xml:space="preserve">  150:$     "type-check": "tsc"</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  151:$   },</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  152:$   "dependencies": {</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  153:$     "blessed": "^0.1.81",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  154:$     "jsdom": "^25.0.1"</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  155:$   },</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  156:$   "peerDependencies": {</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  157:$     "canvas": "^2.11.2",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  158:$     "gifencoder": "^2.0.1",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  159:$     "terminalizer": "^0.12.0"</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  160:$   },</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  161:$   "devDependencies": {</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  162:$     "@jest/globals": "^29.7.0",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  163:$     "@types/react": "^19.0.0",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  164:$     "animaterm": "link:",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  165:$     "form-data": "^4.0.1",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  166:$     "jest": "^29.7.0",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  167:$     "node-fetch": "^2.6.2",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  168:$     "slash": "^5.1.0",</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  169:$     "typescript": "^5.7.2"</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  170:$   }</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  171:$ }</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  172:$ </tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  173:$ █</tspan>
               <animate id="frame169enter" attributeName="opacity" from="0" to="1" begin="frame168leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame169leave" attributeName="opacity" from="1" to="0" begin="frame169enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -4574,13 +4597,7 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">  150:$     "type-check": "tsc"</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  151:$   },</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  152:$   "dependencies": {</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  153:$     "blessed": "^0.1.81",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  154:$     "jsdom": "^25.0.1"</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  155:$   },</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  156:$   "peerDependencies": {</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">  156:$   "peerDependencies": {</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  157:$     "canvas": "^2.11.2",</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  158:$     "gifencoder": "^2.0.1",</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  159:$     "terminalizer": "^0.12.0"</tspan>
@@ -4597,7 +4614,13 @@
             <tspan x="10" dy="20" xml:space="preserve">  170:$   }</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  171:$ }</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  172:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  173:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  173:$ 1</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  174:$ 2</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  175:$ 3</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  176:$ 4</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  179:$ 7█</tspan>
               <animate id="frame184enter" attributeName="opacity" from="0" to="1" begin="frame183leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame184leave" attributeName="opacity" from="1" to="0" begin="frame184enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5009,8 +5032,7 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">  156:$   "peerDependencies": {</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  157:$     "canvas": "^2.11.2",</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">  157:$     "canvas": "^2.11.2",</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  158:$     "gifencoder": "^2.0.1",</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  159:$     "terminalizer": "^0.12.0"</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  160:$   },</tspan>
@@ -5032,7 +5054,8 @@
             <tspan x="10" dy="20" xml:space="preserve">  176:$ 4</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  179:$ 7█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ █</tspan>
               <animate id="frame199enter" attributeName="opacity" from="0" to="1" begin="frame198leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame199leave" attributeName="opacity" from="1" to="0" begin="frame199enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5061,7 +5084,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ █</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ c█</tspan>
               <animate id="frame200enter" attributeName="opacity" from="0" to="1" begin="frame199leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame200leave" attributeName="opacity" from="1" to="0" begin="frame200enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5090,7 +5113,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ c█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ cl█</tspan>
               <animate id="frame201enter" attributeName="opacity" from="0" to="1" begin="frame200leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame201leave" attributeName="opacity" from="1" to="0" begin="frame201enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5119,7 +5142,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ cl█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ cle█</tspan>
               <animate id="frame202enter" attributeName="opacity" from="0" to="1" begin="frame201leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame202leave" attributeName="opacity" from="1" to="0" begin="frame202enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5148,7 +5171,7 @@
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ cle█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ clea█</tspan>
               <animate id="frame203enter" attributeName="opacity" from="0" to="1" begin="frame202leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame203leave" attributeName="opacity" from="1" to="0" begin="frame203enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5177,84 +5200,61 @@
             <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
             <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ clea█</tspan>
+            <tspan x="10" dy="20" xml:space="preserve">  180:$ clear█</tspan>
               <animate id="frame204enter" attributeName="opacity" from="0" to="1" begin="frame203leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame204leave" attributeName="opacity" from="1" to="0" begin="frame204enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">  157:$     "canvas": "^2.11.2",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  158:$     "gifencoder": "^2.0.1",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  159:$     "terminalizer": "^0.12.0"</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  160:$   },</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  161:$   "devDependencies": {</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  162:$     "@jest/globals": "^29.7.0",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  163:$     "@types/react": "^19.0.0",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  164:$     "animaterm": "link:",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  165:$     "form-data": "^4.0.1",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  166:$     "jest": "^29.7.0",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  167:$     "node-fetch": "^2.6.2",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  168:$     "slash": "^5.1.0",</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  169:$     "typescript": "^5.7.2"</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  170:$   }</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  171:$ }</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  172:$ </tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  173:$ 1</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  174:$ 2</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  175:$ 3</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  176:$ 4</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  177:$ 5</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  178:$ 6</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  179:$ 7</tspan>
-            <tspan x="10" dy="20" xml:space="preserve">  180:$ clear</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ </tspan>
               <animate id="frame205enter" attributeName="opacity" from="0" to="1" begin="frame204leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame205leave" attributeName="opacity" from="1" to="0" begin="frame205enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ </tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ G</tspan>
               <animate id="frame206enter" attributeName="opacity" from="0" to="1" begin="frame205leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame206leave" attributeName="opacity" from="1" to="0" begin="frame206enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ G</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Go</tspan>
               <animate id="frame207enter" attributeName="opacity" from="0" to="1" begin="frame206leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame207leave" attributeName="opacity" from="1" to="0" begin="frame207enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Go</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goo</tspan>
               <animate id="frame208enter" attributeName="opacity" from="0" to="1" begin="frame207leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame208leave" attributeName="opacity" from="1" to="0" begin="frame208enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goo</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Good</tspan>
               <animate id="frame209enter" attributeName="opacity" from="0" to="1" begin="frame208leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame209leave" attributeName="opacity" from="1" to="0" begin="frame209enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Good</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodb</tspan>
               <animate id="frame210enter" attributeName="opacity" from="0" to="1" begin="frame209leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame210leave" attributeName="opacity" from="1" to="0" begin="frame210enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodb█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodby█</tspan>
               <animate id="frame211enter" attributeName="opacity" from="0" to="1" begin="frame210leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame211leave" attributeName="opacity" from="1" to="0" begin="frame211enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodby█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodbye█</tspan>
               <animate id="frame212enter" attributeName="opacity" from="0" to="1" begin="frame211leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame212leave" attributeName="opacity" from="1" to="0" begin="frame212enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodbye█</tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodbye!█</tspan>
               <animate id="frame213enter" attributeName="opacity" from="0" to="1" begin="frame212leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame213leave" attributeName="opacity" from="1" to="0" begin="frame213enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
@@ -5707,12 +5707,6 @@
               <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodbye!█</tspan>
               <animate id="frame288enter" attributeName="opacity" from="0" to="1" begin="frame287leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame288leave" attributeName="opacity" from="1" to="0" begin="frame288enter.end+0.07s" dur="0.000001s" fill="freeze" />
-          </text>
-
-          <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ Goodbye!</tspan>
-              <animate id="frame289enter" attributeName="opacity" from="0" to="1" begin="frame288leave.end" dur="0.000001s" fill="freeze" />
-              <animate id="frame289leave" attributeName="opacity" from="1" to="0" begin="frame289enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
   </svg>
       
