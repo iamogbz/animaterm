@@ -173,9 +173,9 @@ async function finishRecording(state, exitCode = 0) {
   await delay(state, SEC_TO_MS * 5);
 
   const renderers = {
-    tlz: terminalizer.render,
     gif: gif.render,
     svg: svg.render,
+    tlz: terminalizer.render,
   };
   const fileExt = getExtension(state.outputPath);
   const renderFormat =
