@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const NodeFormData = require("form-data");
 const nodeFetch = require("node-fetch").default;
 
 const [, , outputPath] = process.argv;
@@ -9,30 +8,60 @@ const IMAGE_PATH = path.resolve(finalOutputPath);
 // const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 
-async function uploadToCatbox(filePath) {
-  // Catbox upload endpoint
-  const apiUrl = "https://catbox.moe/user/api.php";
+async function uploadToGitHub(filePath, owner, repo, token) {
+  // Read file and encode to base64 for GitHub Contents API
+  const content = fs.readFileSync(filePath, { encoding: "base64" });
+  const fileName = path.basename(filePath);
+  
+  // Calculate relative path in the repo to use as the destination path
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const repoRelativePath = path.relative(workspace, filePath).split(path.sep).join("/");
 
-  // Create a form data object
-  const formData = new NodeFormData();
-  formData.append("reqtype", "fileupload"); // Required parameter for Catbox
-  formData.append("fileToUpload", fs.createReadStream(filePath)); // Append the file to upload
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoRelativePath}`;
+  const headers = {
+    Authorization: `token ${token}`,
+    "Content-Type": "application/json",
+  };
+
+  // Check if file exists to get its SHA (required for updating an existing file)
+  let fileSha;
+  try {
+    const getFileResponse = await nodeFetch(apiUrl, { headers });
+    if (getFileResponse.ok) {
+      const getFileData = await getFileResponse.json();
+      fileSha = getFileData.sha;
+    }
+  } catch (error) {
+    // Silently ignore, file likely does not exist yet
+  }
+
+  // Ensure it uploads to the correct branch if running on a PR or specific branch
+  const branch = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME;
+
+  const body = {
+    message: `Upload ${fileName}`,
+    content,
+  };
+
+  if (branch) body.branch = branch;
+  if (fileSha) body.sha = fileSha;
 
   try {
-    // Make the POST request to upload the file
     const response = await nodeFetch(apiUrl, {
-      method: "POST",
-      body: formData,
+      method: "PUT",
+      headers,
+      body: JSON.stringify(body),
     });
 
-    // Parse the response text
-    const responseText = await response.text();
+    const responseData = await response.json();
 
     if (response.ok) {
-      console.log("File uploaded successfully! URL:", responseText);
-      return responseText; // Return the URL of the uploaded file
+      // Using html_url with ?raw=true ensures it renders properly in markdown, even in private repos
+      const rawUrl = `${responseData.content.html_url}?raw=true`;
+      console.log("File uploaded successfully! URL:", rawUrl);
+      return rawUrl;
     } else {
-      console.error("Failed to upload file. Response:", responseText);
+      console.error("Failed to upload file. Response:", responseData);
       throw new Error(`File upload failed: ${filePath}`);
     }
   } catch (error) {
@@ -46,8 +75,9 @@ async function run() {
   const github = JSON.parse(context);
   const [owner, repo] = github.repository.split("/");
   const { event_name, event, sha } = github;
+  const token = process.env.GITHUB_TOKEN;
 
-  const imageUrl = await uploadToCatbox(IMAGE_PATH);
+  const imageUrl = await uploadToGitHub(IMAGE_PATH, owner, repo, token);
   const imageMarkdown = `![Generated Image](${imageUrl})`;
 
   const commentBody = `${COMMENT_IDENTIFIER}\n${imageMarkdown}`;
@@ -61,7 +91,7 @@ async function run() {
     "/comments",
   ].join("");
 
-  const Authorization = `token ${process.env.GITHUB_TOKEN}`;
+  const Authorization = `token ${token}`;
   const headers = {
     Authorization,
     "Content-Type": "application/json",
