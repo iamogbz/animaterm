@@ -71,7 +71,7 @@
           </text>
 
           <text x="10" y="20" class="frame" opacity="0" xml:space="preserve">
-              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 </tspan>
+              <tspan x="10" dy="0" xml:space="preserve">    1:$ seq 1 0</tspan>
               <animate id="frame11enter" attributeName="opacity" from="0" to="1" begin="frame10leave.end" dur="0.000001s" fill="freeze" />
               <animate id="frame11leave" attributeName="opacity" from="1" to="0" begin="frame11enter.end+0.07s" dur="0.000001s" fill="freeze" />
           </text>
