@@ -348,4 +348,14 @@ async function simulateSteps(steps, outputPath) {
   await finish();
 }
 
-module.exports = { screen, simulateSteps };
+function getArgs() {
+  const [, scriptPath, outputPath] = process.argv;
+  // prefer using the path provided in the terminal but fallback to env config
+  const finalOutputPath = outputPath || process.env.OUTPUT_PATH || "";
+  return Object.freeze({
+    animationScript: scriptPath,
+    animationOutput: finalOutputPath,
+  });
+}
+
+module.exports = { screen, simulateSteps, getArgs };
