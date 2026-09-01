@@ -8,6 +8,93 @@ const IMAGE_PATH = path.resolve(args.animationOutput);
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 const DEFAULT_BRANCH = "main";
 
+/**
+ * Helper function to resolve MIME type natively
+ * @param {string} filePath
+ */
+function getMimeType(filePath) {
+  const mimeMap = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".svg": "image/svg+xml",
+    ".bmp": "image/bmp",
+    ".ico": "image/x-icon",
+  };
+  const ext = path.extname(filePath).toLowerCase();
+  // @ts-expect-error cause regular js can be stupid sometimes
+  return mimeMap[ext] || "application/octet-stream";
+}
+
+/**
+ * Upload to github user assets
+ * @param {string} filePath local file path
+ * @param {string} owner
+ * @param {string} repo
+ * @param {string} token
+ * @returns uploaded image path
+ */
+async function uploadToAssets(filePath, owner, repo, token) {
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
+    const fileName = path.basename(filePath);
+    const mimeType = getMimeType(filePath);
+    const repoUrl = `https://github.com/${owner}/${repo}`;
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "NodeJS-Script", // GitHub API requires a User-Agent
+    };
+
+    // Step 1: Get the Repository ID
+    console.log("Fetching repository metadata...");
+    const repoResponse = await fetch(repoUrl, { headers });
+    if (!repoResponse.ok)
+      throw new Error(`Repo fetch failed: ${repoResponse.statusText}`);
+    const repoData = await repoResponse.json();
+    const repoId = repoData.id;
+
+    // Step 2: Upload the binary image file
+    console.log("Uploading image asset...");
+    const uploadUrl = `https://github.com${encodeURIComponent(
+      fileName
+    )}&content_type=${encodeURIComponent(mimeType)}&repository_id=${repoId}`;
+
+    const uploadResponse = await fetch(uploadUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": mimeType,
+        "User-Agent": "NodeJS-Script",
+      },
+      body: fileBuffer,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorText = await uploadResponse.text();
+      throw new Error(`Upload failed (${uploadResponse.status}): ${errorText}`);
+    }
+
+    const uploadData = await uploadResponse.json();
+    const imageUrl = uploadData.asset.href;
+    console.log(`Image for commit uploaded successfully! URL: ${imageUrl}`);
+    return imageUrl;
+  } catch (error) {
+    console.error("Error executing workflow:", error);
+  }
+}
+
+/**
+ * Upload to github repo contents
+ * @param {string} filePath local file path
+ * @param {string} owner
+ * @param {string} repo
+ * @param {string} token
+ * @returns uploaded image path
+ */
 async function uploadToGitHub(filePath, owner, repo, token) {
   // Read file and encode to base64 for GitHub Contents API
   const content = fs.readFileSync(filePath, { encoding: "base64" });
@@ -49,8 +136,8 @@ async function uploadToGitHub(filePath, owner, repo, token) {
     content,
   };
 
-  if (branch) body.branch = branch;
-  if (fileSha) body.sha = fileSha;
+  if (branch) Object.assign(body, { branch });
+  if (fileSha) Object.assign(body, { sha: fileSha });
 
   try {
     const response = await nodeFetch(apiUrl, {
@@ -83,13 +170,21 @@ async function run() {
   const { event_name, event, sha } = github;
   const token = process.env.GITHUB_TOKEN;
 
-  const imageUrl = await uploadToGitHub(IMAGE_PATH, owner, repo, token);
+  if (!token) {
+    console.error("No GITHUB_TOKEN detected in environment");
+    process.exit(1);
+  }
+
+  // Determine if we are on a PR or commit
+  const isPullRequest = event_name === "pull_request";
+
+  const imageUrl = await (isPullRequest
+    ? uploadToGitHub(IMAGE_PATH, owner, repo, token)
+    : uploadToAssets(IMAGE_PATH, owner, repo, token));
   const imageMarkdown = `![Generated Image](${imageUrl})`;
 
   const commentBody = `${COMMENT_IDENTIFIER}\n${imageMarkdown}`;
 
-  // Determine if we are on a PR or commit
-  const isPullRequest = event_name === "pull_request";
   const repoEndpoint = `https://api.github.com/repos/${owner}/${repo}/`;
   const commentsEndpoint = [
     repoEndpoint,
@@ -128,6 +223,7 @@ async function run() {
     },
   };
 
+  let method = "POST";
   if (existingComment) {
     // Update existing comment
     console.log("Updating existing comment", existingComment.id);
@@ -135,12 +231,12 @@ async function run() {
       params.endpoint = `${repoEndpoint}issues/comments`;
     }
     params.endpoint = `${params.endpoint}/${existingComment.id}`;
-    params.requestInit.method = "PATCH";
+    method = "PATCH";
   } else {
     // Post new comment
     console.log("Creating new comment");
-    params.requestInit.method = "POST";
   }
+  Object.assign(params.requestInit, { method });
 
   console.log("Comment request", params);
   const commentResult = await nodeFetch(params.endpoint, params.requestInit);
