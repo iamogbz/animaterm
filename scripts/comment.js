@@ -5,7 +5,6 @@ const nodeFetch = require("node-fetch").default;
 const [, , outputPath] = process.argv;
 const finalOutputPath = outputPath || process.env.OUTPUT_PATH || outputPath;
 const IMAGE_PATH = path.resolve(finalOutputPath);
-// const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
 const DEFAULT_BRANCH = "main";
 
