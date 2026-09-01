@@ -349,7 +349,7 @@ async function simulateSteps(steps, outputPath) {
 }
 
 function getArgs() {
-  const [, scriptPath, outputPath] = process.argv;
+  const [, _, scriptPath, outputPath] = process.argv;
   // prefer using the path provided in the terminal but fallback to env config
   const finalOutputPath = outputPath || process.env.OUTPUT_PATH || "";
   return Object.freeze({
