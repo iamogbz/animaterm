@@ -1,13 +1,16 @@
 const blessed = require("blessed");
+const fs = require("fs");
 const { exec } = require("child_process");
 const gif = require("./renderer/gif");
 const svg = require("./renderer/svg");
 const terminalizer = require("./renderer/terminalizer");
 const { TOKEN_NL, SEC_TO_MS } = require("./constants");
-const { getExtension } = require("./utils");
+const { getExtension, mergeObjects } = require("./utils");
+const defaultConfig = require("./config.json");
 
-/** @type {Config} TODO: export config */
-const config = {
+/** @type {Config} */
+const appConfig = {
+  ...defaultConfig,
   title: "Automated Terminal Interaction Animation",
   lineCount: 24,
   dimensionsPx: {
@@ -20,43 +23,29 @@ const config = {
     width: 800,
     get height() {
       // NOTE: hacky for some reason sizing does not line up exactly
-      return this.lineHeight * config.lineCount + this.padding.y / 2;
+      return (
+        appConfig.dimensionsPx.lineHeight * appConfig.lineCount +
+        appConfig.dimensionsPx.padding.y / 2
+      );
     },
     get lineHeight() {
-      return this.text + this.gap;
+      return appConfig.dimensionsPx.text + appConfig.dimensionsPx.gap;
     },
   },
+  // @ts-expect-error typehinting between json files and typescript
   animation: {
-    /** @type {React.CSSProperties} */
+    ...defaultConfig.animation,
     css: {
-      backgroundColor: "black",
-      borderColor: "grey",
-      color: "white",
-      fontStyle: "monospace",
       get fontSize() {
-        return `${config.dimensionsPx.text}px`;
+        return `${appConfig.dimensionsPx.text}px`;
       },
     },
-    cursor: {
-      /** Set to 0 to disable blinking */
-      blinkMs: 1000,
-      /** Set to empty string "" to disable cursor */
-      token: "█",
-    },
-    fps: 15,
-    lineNumber: true,
-    quality: 10,
-    renderer: "svg",
-    /** 0 means repeat forever */
-    repeat: 0,
-    typing: {
-      speedMs: 30,
-    },
     get msPerFrame() {
-      return SEC_TO_MS / this.fps;
+      return SEC_TO_MS / appConfig.animation.fps;
     },
   },
 };
+const config = mergeObjects(defaultConfig, appConfig);
 
 // Terminal simulation setup
 const screen = blessed.screen({
@@ -164,6 +153,12 @@ function updateTerminal(state) {
   recordFrame(state);
 }
 
+const RENDERERS = Object.freeze({
+  gif: gif.render,
+  svg: svg.render,
+  tlz: terminalizer.render,
+});
+
 /**
  * Utility to terminate and save recording
  *
@@ -172,16 +167,12 @@ function updateTerminal(state) {
 async function finishRecording(state, exitCode = 0) {
   await delay(state, SEC_TO_MS * 5);
 
-  const renderers = {
-    gif: gif.render,
-    svg: svg.render,
-    tlz: terminalizer.render,
-  };
   const fileExt = getExtension(state.outputPath);
+  /** @type {Config['animation']['renderer']} */
   const renderFormat =
-    fileExt in renderers ? fileExt : config.animation.renderer;
+    fileExt in RENDERERS ? fileExt : config.animation.renderer;
 
-  const filePath = renderers[renderFormat](state, config);
+  const filePath = RENDERERS[renderFormat](state, config);
 
   console.log("Recording saved as", filePath);
   process.exit(exitCode);
@@ -342,19 +333,41 @@ async function simulateSteps(steps, outputPath) {
       }
     }
   } catch (error) {
-    await abortExecution(state, `Unexpected error: ${error.message}`);
+    await abortExecution(state, `Unexpected error: ${error}`);
   }
 
   await finish();
 }
 
 function getArgs() {
-  const [, _, scriptPath, outputPath] = process.argv;
+  const [, _, scriptPath, maybeOutputPath] = process.argv;
+  const outputExt =
+    typeof maybeOutputPath == "string" ? getExtension(maybeOutputPath) : "";
+  const isSupportedOutputExt = outputExt in RENDERERS;
   // prefer using the path provided in the terminal but fallback to env config
-  const finalOutputPath = outputPath || process.env.OUTPUT_PATH || "";
+  const outputPath = isSupportedOutputExt
+    ? maybeOutputPath
+    : process.env.OUTPUT_PATH || "";
+  // attempt to parse second argument as json config
+  if (!isSupportedOutputExt && maybeOutputPath) {
+    try {
+      const jsonConfig = JSON.parse(
+        fs.readFileSync(maybeOutputPath).toString()
+      );
+      // TODO: fix the use of a global config object here
+      mergeObjects(config, jsonConfig);
+    } catch (e) {
+      console.error("Unable to parse json config file at", maybeOutputPath);
+      process.exit(1);
+    }
+  }
+  if (!config.outputPath) {
+    config.outputPath = outputPath;
+  }
+  // attempt to treat the oytp
   return Object.freeze({
     animationScript: scriptPath,
-    animationOutput: finalOutputPath,
+    animationOutput: config.outputPath,
   });
 }
 

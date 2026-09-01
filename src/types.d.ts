@@ -12,6 +12,8 @@ interface Config {
     height: number;
     lineHeight: number;
   };
+  /** Output file path */
+  outputPath?: string;
   animation: {
     css: React.CSSProperties;
     cursor: {

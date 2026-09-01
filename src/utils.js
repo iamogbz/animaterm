@@ -24,4 +24,21 @@ function setExtension(filePath, targetExt) {
   );
 }
 
-module.exports = { getExtension, setExtension };
+/**
+ * Recursively merge contents of object B into object A
+ * @param {*} objA
+ * @param {*} objB
+ */
+function mergeObjects(objA, objB) {
+  for (const objBKey of Object.keys(objB)) {
+    const valueA = objA[objBKey];
+    if (typeof valueA === "object") {
+      objA[objBKey] = mergeObjects(valueA, objB[objBKey]);
+    } else {
+      objA[objBKey] = objB[objBKey];
+    }
+  }
+  return objA;
+}
+
+module.exports = { getExtension, setExtension, mergeObjects };

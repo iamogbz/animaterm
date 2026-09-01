@@ -50,7 +50,9 @@ Defined by the interface `Config`:
 
 https://github.com/iamogbz/animaterm/blob/027ff13/src/types.d.ts#L1-L35
 
-> TODO: add instructions on overriding the default config
+```sh
+animaterm script.json config.json
+```
 
 ## Inspirations
 
