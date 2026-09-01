@@ -41,7 +41,7 @@ async function uploadToAssets(filePath, owner, repo, token) {
     const fileBuffer = fs.readFileSync(filePath);
     const fileName = path.basename(filePath);
     const mimeType = getMimeType(filePath);
-    const repoUrl = `https://github.com/${owner}/${repo}`;
+    const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -50,7 +50,7 @@ async function uploadToAssets(filePath, owner, repo, token) {
     };
 
     // Step 1: Get the Repository ID
-    console.log("Fetching repository metadata...");
+    console.log("Fetching repository metadata...", repoUrl);
     const repoResponse = await fetch(repoUrl, { headers });
     if (!repoResponse.ok)
       throw new Error(`Repo fetch failed: ${repoResponse.statusText}`);
@@ -58,10 +58,10 @@ async function uploadToAssets(filePath, owner, repo, token) {
     const repoId = repoData.id;
 
     // Step 2: Upload the binary image file
-    console.log("Uploading image asset...");
-    const uploadUrl = `https://github.com${encodeURIComponent(
-      fileName
-    )}&content_type=${encodeURIComponent(mimeType)}&repository_id=${repoId}`;
+    const encodedFileName = encodeURIComponent(fileName);
+    const encodedContentType = encodeURIComponent(mimeType);
+    const uploadUrl = `https://uploads.github.com/user-attachments/assets?name=${encodedFileName}&content_type=${encodedContentType}&repository_id=${repoId}`;
+    console.log("Uploading image asset...", uploadUrl);
 
     const uploadResponse = await fetch(uploadUrl, {
       method: "POST",
