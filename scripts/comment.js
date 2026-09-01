@@ -7,17 +7,27 @@ const finalOutputPath = outputPath || process.env.OUTPUT_PATH || outputPath;
 const IMAGE_PATH = path.resolve(finalOutputPath);
 // const IMAGE_EXT = IMAGE_PATH.split(".").pop();
 const COMMENT_IDENTIFIER = "<!-- GENERATED_IMAGE_COMMENT -->";
+const DEFAULT_BRANCH = "main";
 
 async function uploadToGitHub(filePath, owner, repo, token) {
   // Read file and encode to base64 for GitHub Contents API
   const content = fs.readFileSync(filePath, { encoding: "base64" });
   const fileName = path.basename(filePath);
-  
+
+  // Ensure it uploads to the correct branch if running on a PR or specific branch
+  const branch =
+    process.env.GITHUB_HEAD_REF ||
+    process.env.GITHUB_REF_NAME ||
+    DEFAULT_BRANCH;
+
   // Calculate relative path in the repo to use as the destination path
   const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
-  const repoRelativePath = path.relative(workspace, filePath).split(path.sep).join("/");
+  const repoRelativePath = path
+    .relative(workspace, filePath)
+    .split(path.sep)
+    .join("/");
 
-  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoRelativePath}`;
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoRelativePath}?ref=${branch}`;
   const headers = {
     Authorization: `token ${token}`,
     "Content-Type": "application/json",
@@ -34,9 +44,6 @@ async function uploadToGitHub(filePath, owner, repo, token) {
   } catch (error) {
     // Silently ignore, file likely does not exist yet
   }
-
-  // Ensure it uploads to the correct branch if running on a PR or specific branch
-  const branch = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME;
 
   const body = {
     message: `Upload ${fileName}`,
