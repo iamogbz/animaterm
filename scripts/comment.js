@@ -79,7 +79,7 @@ async function uploadToAssets(filePath, owner, repo, token) {
     }
 
     const uploadData = await uploadResponse.json();
-    const imageUrl = uploadData.asset.href;
+    const imageUrl = uploadData.url;
     console.log(`Image for commit uploaded successfully! URL: ${imageUrl}`);
     return imageUrl;
   } catch (error) {

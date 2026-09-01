@@ -7,6 +7,10 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+# Grant write access to repository contents globally across this workflow
+permissions:
+  contents: write
+
 jobs:
   demo-current-build:
     name: Demo current build
